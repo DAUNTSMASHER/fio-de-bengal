@@ -1,0 +1,7 @@
+name = "fio-de-bengal"
+pages_build_output_dir = "dist"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "fio-db"
+database_id = "d6491928-8437-4b16-a6f5-c7ee543a4ccf"
