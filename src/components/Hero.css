@@ -3,56 +3,56 @@
   min-height: 85vh;
   display: flex;
   align-items: center;
-  justify-content: center;
   overflow: hidden;
   background-color: var(--bg-primary);
   border-bottom: 1px solid var(--border-muted);
-  padding: 80px 0;
+}
+
+.hero-bg-left-watermark {
+  position: absolute;
+  top: 0;
+  left: -5%; /* Shift it slightly offscreen for a natural background feel */
+  width: 55%; /* Takes up roughly the left half */
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.hero-bg-tiger-logo {
+  max-width: 140%;
+  max-height: 140%;
+  object-fit: contain;
+  opacity: 0.08; /* Premium subtle watermark */
+  mix-blend-mode: multiply;
+  animation: slowPulseRotate 40s linear infinite;
+}
+
+@keyframes slowPulseRotate {
+  0% { transform: rotate(-5deg) scale(1); }
+  50% { transform: rotate(5deg) scale(1.05); }
+  100% { transform: rotate(-5deg) scale(1); }
 }
 
 .hero-container {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 80px;
-  align-items: center;
   position: relative;
   z-index: 2;
+  width: 100%;
   max-width: 1200px;
-  width: 100%;
-}
-
-.hero-logo-side {
   display: flex;
-  justify-content: center;
-  align-items: center;
+  justify-content: flex-end; /* Push text to the right side */
+  padding: 0 40px;
 }
 
-.hero-tiger-logo {
-  width: 100%;
-  max-width: 500px;
-  max-height: 60vh;
-  object-fit: contain;
-  mix-blend-mode: multiply;
-  opacity: 0.85; /* Extremely premium blended look */
-  animation: floatTiger 6s ease-in-out infinite; /* Adds subtle life */
-}
-
-@keyframes floatTiger {
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(-15px); }
-  100% { transform: translateY(0px); }
-}
-
-.hero-content-side {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
+.hero-content-right {
+  max-width: 600px;
   text-align: left;
 }
 
 .hero-title {
-  font-size: 4.5rem; /* Larger and bolder for desktop */
+  font-size: 4.5rem;
   line-height: 1.1;
   margin-bottom: 24px;
 }
@@ -66,22 +66,14 @@
 
 @media (max-width: 992px) {
   .hero-container {
-    grid-template-columns: 1fr;
-    text-align: center;
-    gap: 40px;
+    justify-content: center;
   }
-  
-  .hero-content-side {
-    align-items: center;
+  .hero-content-right {
     text-align: center;
   }
-  
-  .hero-tiger-logo {
-    max-height: 40vh;
-    animation: none; /* Disable animation on smaller devices */
-  }
-  
-  .hero-title {
-    font-size: 3rem;
+  .hero-bg-left-watermark {
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
   }
 }
