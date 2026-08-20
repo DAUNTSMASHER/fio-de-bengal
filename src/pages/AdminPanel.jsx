@@ -33,7 +33,7 @@ const AdminPanel = () => {
 
   // Tracking State
   const [trackings, setTrackings] = useState([]);
-  const [trackingForm, setTrackingForm] = useState({ order_no: '', quantity: '', value: '', delivery_country: '' });
+  const [trackingForm, setTrackingForm] = useState({ order_no: '', quantity: '', value: '', delivery_country: '', carrier: 'FedEx' });
   const [updateForm, setUpdateForm] = useState({ order_no: '', new_status: '', location: '', message: '' });
   const [showCreateTracking, setShowCreateTracking] = useState(false);
 
@@ -154,7 +154,7 @@ const AdminPanel = () => {
         body: JSON.stringify({ ...trackingForm, quantity: Number(trackingForm.quantity), value: Number(trackingForm.value) })
       });
       if (!res.ok) throw new Error('Failed to create tracking');
-      setTrackingForm({ order_no: '', quantity: '', value: '', delivery_country: '' });
+      setTrackingForm({ order_no: '', quantity: '', value: '', delivery_country: '', carrier: 'FedEx' });
       setShowCreateTracking(false);
       fetchTrackings();
       alert('Tracking created!');
@@ -386,6 +386,13 @@ const AdminPanel = () => {
                     <div className="form-group" style={{flex: 1}}><label>Quantity</label><input type="number" value={trackingForm.quantity} onChange={e => setTrackingForm({...trackingForm, quantity: e.target.value})} required /></div>
                     <div className="form-group" style={{flex: 1}}><label>Total Value ($)</label><input type="number" step="0.01" value={trackingForm.value} onChange={e => setTrackingForm({...trackingForm, value: e.target.value})} required /></div>
                     <div className="form-group" style={{flex: 1}}><label>Destination Country</label><input type="text" value={trackingForm.delivery_country} onChange={e => setTrackingForm({...trackingForm, delivery_country: e.target.value})} required /></div>
+                    <div className="form-group" style={{flex: 1}}><label>Carrier</label>
+                      <select className="form-control" value={trackingForm.carrier} onChange={e => setTrackingForm({...trackingForm, carrier: e.target.value})}>
+                        <option value="FedEx">FedEx</option>
+                        <option value="DHL">DHL</option>
+                        <option value="UPS">UPS</option>
+                      </select>
+                    </div>
                   </div>
                   <button type="submit" className="btn btn-primary">Create Shipment Record</button>
                 </form>
@@ -420,12 +427,13 @@ const AdminPanel = () => {
               <h3>Active Shipments</h3>
               <table className="admin-table">
                 <thead>
-                  <tr><th>Order No</th><th>Destination</th><th>Qty</th><th>Value</th><th>Current Status</th><th>Last Updated</th></tr>
+                  <tr><th>Order No</th><th>Carrier</th><th>Destination</th><th>Qty</th><th>Value</th><th>Current Status</th><th>Last Updated</th></tr>
                 </thead>
                 <tbody>
                   {trackings.map(t => (
                     <tr key={t.id}>
                       <td><strong>{t.order_no}</strong></td>
+                      <td>{t.carrier || 'FedEx'}</td>
                       <td>{t.delivery_country}</td>
                       <td>{t.quantity}</td>
                       <td>${Number(t.value).toFixed(2)}</td>
@@ -434,7 +442,7 @@ const AdminPanel = () => {
                     </tr>
                   ))}
                   {trackings.length === 0 && (
-                    <tr><td colSpan="6" style={{textAlign: 'center'}}>No shipments tracked yet.</td></tr>
+                    <tr><td colSpan="7" style={{textAlign: 'center'}}>No shipments tracked yet.</td></tr>
                   )}
                 </tbody>
               </table>

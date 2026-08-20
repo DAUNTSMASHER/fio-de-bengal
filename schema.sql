@@ -106,6 +106,7 @@ CREATE TABLE Tracking (
     quantity INTEGER,
     value REAL,
     delivery_country TEXT,
+    carrier TEXT DEFAULT 'FedEx',
     current_status TEXT,
     tracking_history TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP

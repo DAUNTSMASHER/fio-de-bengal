@@ -10,12 +10,12 @@ const TrackingPage = () => {
   const [hasSearched, setHasSearched] = useState(false);
 
   const dummyOrders = [
-    { id: 'FIO-89234', quantity: 15, value: 3450.00, destination: 'United States', status: 'In Transit', time: '2 mins ago', color: '#f59e0b' },
-    { id: 'FIO-44192', quantity: 5, value: 1150.00, destination: 'United Kingdom', status: 'Out for Delivery', time: '14 mins ago', color: '#3b82f6' },
-    { id: 'FIO-99210', quantity: 50, value: 10500.00, destination: 'Australia', status: 'Delivered', time: '1 hour ago', color: '#10b981' },
-    { id: 'FIO-11029', quantity: 2, value: 480.00, destination: 'Canada', status: 'Customs Clearance', time: '3 hours ago', color: '#8b5cf6' },
-    { id: 'FIO-77341', quantity: 10, value: 2200.00, destination: 'Germany', status: 'Dispatched', time: '5 hours ago', color: '#6366f1' },
-    { id: 'FIO-22948', quantity: 8, value: 1840.00, destination: 'France', status: 'Delivered', time: '1 day ago', color: '#10b981' }
+    { id: 'FIO-89234', quantity: 15, value: 3450.00, carrier: 'FedEx', destination: 'United States', status: 'In Transit', time: '2 mins ago', color: '#f59e0b' },
+    { id: 'FIO-44192', quantity: 5, value: 1150.00, carrier: 'DHL', destination: 'United Kingdom', status: 'Out for Delivery', time: '14 mins ago', color: '#3b82f6' },
+    { id: 'FIO-99210', quantity: 50, value: 10500.00, carrier: 'UPS', destination: 'Australia', status: 'Delivered', time: '1 hour ago', color: '#10b981' },
+    { id: 'FIO-11029', quantity: 2, value: 480.00, carrier: 'FedEx', destination: 'Canada', status: 'Customs Clearance', time: '3 hours ago', color: '#8b5cf6' },
+    { id: 'FIO-77341', quantity: 10, value: 2200.00, carrier: 'DHL', destination: 'Germany', status: 'Dispatched', time: '5 hours ago', color: '#6366f1' },
+    { id: 'FIO-22948', quantity: 8, value: 1840.00, carrier: 'UPS', destination: 'France', status: 'Delivered', time: '1 day ago', color: '#10b981' }
   ];
 
   const handleSearch = async (e) => {
@@ -44,12 +44,21 @@ const TrackingPage = () => {
     }
   };
 
+  const getCarrierLogo = (carrier) => {
+    switch (carrier) {
+      case 'FedEx': return 'https://upload.wikimedia.org/wikipedia/commons/9/9d/FedEx_Express.svg';
+      case 'DHL': return 'https://upload.wikimedia.org/wikipedia/commons/b/b1/DHL_Logo.svg';
+      case 'UPS': return 'https://upload.wikimedia.org/wikipedia/commons/1/1b/UPS_logo.svg';
+      default: return null;
+    }
+  };
+
   return (
     <div className="tracking-page texture-bengal-wave">
       <div className="container">
         <div className="tracking-header">
-          <h1>Global Order Tracking</h1>
-          <p>Track your FIO DE BENGAL shipments globally in real-time.</p>
+          <h1>Order Tracking</h1>
+          <p>Track your FIO DE BENGAL shipments in real-time.</p>
         </div>
 
         <div className="tracking-search-card">
@@ -82,6 +91,16 @@ const TrackingPage = () => {
               <div className="summary-item">
                 <span className="summary-label">Order No</span>
                 <span className="summary-value">{trackingData.order_no}</span>
+              </div>
+              <div className="summary-item">
+                <span className="summary-label">Carrier</span>
+                <span className="summary-value">
+                  {getCarrierLogo(trackingData.carrier) ? (
+                    <img src={getCarrierLogo(trackingData.carrier)} alt={trackingData.carrier} style={{height: '20px', marginTop: '4px'}} />
+                  ) : (
+                    trackingData.carrier || 'Standard'
+                  )}
+                </span>
               </div>
               <div className="summary-item">
                 <span className="summary-label">Quantity</span>
@@ -130,13 +149,14 @@ const TrackingPage = () => {
         {!trackingData && (
           <div className="live-dummy-orders">
             <h3 className="live-orders-title">
-              <div className="pulsing-dot"></div> Live Global Shipments
+              <div className="pulsing-dot"></div> Live Shipments
             </h3>
             <div className="dummy-orders-list-container">
               <table className="dummy-orders-table">
                 <thead>
                   <tr>
                     <th>Order No</th>
+                    <th>Carrier</th>
                     <th>Quantity</th>
                     <th>Total Value</th>
                     <th>Country</th>
@@ -148,6 +168,13 @@ const TrackingPage = () => {
                   {dummyOrders.map((order, idx) => (
                     <tr key={idx}>
                       <td><strong>{order.id}</strong></td>
+                      <td>
+                        {getCarrierLogo(order.carrier) ? (
+                          <img src={getCarrierLogo(order.carrier)} alt={order.carrier} style={{height: '18px'}} />
+                        ) : (
+                          order.carrier
+                        )}
+                      </td>
                       <td>{order.quantity} Units</td>
                       <td>${order.value.toFixed(2)}</td>
                       <td>{order.destination}</td>

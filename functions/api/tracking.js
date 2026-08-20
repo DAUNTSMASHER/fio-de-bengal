@@ -41,19 +41,20 @@ export async function onRequest(context) {
   }
   
   if (method === 'POST') {
-    // Admin creates new shipment
     try {
       const data = await request.json();
-      const { order_no, quantity, value, delivery_country } = data;
-      
-      const history = JSON.stringify([
-        { date: new Date().toISOString(), location: 'System', message: 'Shipment created' }
-      ]);
-      
+      const { order_no, quantity, value, delivery_country, carrier } = data;
+      const initialStatus = 'Pending Fulfillment';
+      const history = JSON.stringify([{
+        date: new Date().toISOString(),
+        message: 'Order received and processing',
+        location: 'FIO DE BENGAL Facility'
+      }]);
+
       await env.DB.prepare(
-        'INSERT INTO Tracking (order_no, quantity, value, delivery_country, current_status, tracking_history) VALUES (?, ?, ?, ?, ?, ?)'
-      ).bind(order_no, quantity, value, delivery_country, 'Processing', history).run();
-      
+        `INSERT INTO Tracking (order_no, quantity, value, delivery_country, carrier, current_status, tracking_history) VALUES (?, ?, ?, ?, ?, ?, ?)`
+      ).bind(order_no, quantity, value, delivery_country, carrier || 'FedEx', initialStatus, history).run();
+
       return new Response(JSON.stringify({ success: true }), { status: 201 });
     } catch (err) {
       return new Response(JSON.stringify({ error: err.message }), { status: 500 });

@@ -37,7 +37,7 @@ const Navbar = () => {
         <nav className={`navbar-links ${isOpen ? 'active' : ''}`}>
           <Link to="/" onClick={() => setIsOpen(false)}>HOME</Link>
           <Link to="/products" onClick={() => setIsOpen(false)}>PRODUCTS</Link>
-          <Link to="/tracking" onClick={() => setIsOpen(false)}>GLOBAL TRACKING</Link>
+          <Link to="/tracking" onClick={() => setIsOpen(false)}>TRACKING</Link>
           
           <Link to="/cart" className="cart-icon-wrapper" onClick={() => setIsOpen(false)}>
             <ShoppingBag size={24} color="var(--text-primary)" strokeWidth={1.5} />
