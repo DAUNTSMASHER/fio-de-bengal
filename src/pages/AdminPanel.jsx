@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { Package, ShoppingCart, Users, LogOut, UploadCloud, Archive, MessageSquare } from 'lucide-react';
+import { Package, ShoppingCart, Users, LogOut, UploadCloud, Archive, MessageSquare, MapPin } from 'lucide-react';
 import ChatWindow from '../components/ChatWindow';
 import './AdminPanel.css';
 
@@ -20,27 +20,50 @@ const AdminPanel = () => {
   // Inventory State
   const [inventory, setInventory] = useState([]);
   const [activeInventoryTab, setActiveInventoryTab] = useState('base');
+  const [selectedProductId, setSelectedProductId] = useState(1);
+  const [products, setProducts] = useState([
+    { id: 1, name: 'Hollywood' }, { id: 2, name: 'BMW' }, { id: 3, name: 'Mono' },
+    { id: 4, name: 'Mono Front Lace' }, { id: 5, name: 'Australia' }, { id: 6, name: 'Full Lace' }
+  ]);
+  const [editingInventory, setEditingInventory] = useState(null);
 
   // Negotiations State
   const [inquiries, setInquiries] = useState([]);
   const [activeInquiry, setActiveInquiry] = useState(null);
 
+  // Tracking State
+  const [trackings, setTrackings] = useState([]);
+  const [trackingForm, setTrackingForm] = useState({ order_no: '', quantity: '', value: '', delivery_country: '' });
+  const [updateForm, setUpdateForm] = useState({ order_no: '', new_status: '', location: '', message: '' });
+  const [showCreateTracking, setShowCreateTracking] = useState(false);
+
   useEffect(() => {
     if (user && user.role === 'admin') {
-      fetch(`/api/inventory?t=${new Date().getTime()}`)
+      fetch(`/api/inventory?product_id=${selectedProductId}&t=${new Date().getTime()}`)
         .then(res => res.json())
         .then(data => setInventory(data || []))
         .catch(err => console.error(err));
         
       fetchInquiries();
+      fetchTrackings();
     }
-  }, [user]);
+  }, [user, selectedProductId]);
+
+  const fetchTrackings = async () => {
+    try {
+      const res = await fetch(`/api/tracking?t=${new Date().getTime()}`);
+      const data = await res.json();
+      setTrackings(Array.isArray(data) ? data : []);
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   const fetchInquiries = async () => {
     try {
       const res = await fetch(`/api/inquiries?t=${new Date().getTime()}`);
       const data = await res.json();
-      setInquiries(data);
+      setInquiries(Array.isArray(data) ? data : []);
     } catch (err) {
       console.error(err);
     }
@@ -122,6 +145,42 @@ const AdminPanel = () => {
     }
   };
 
+  const handleCreateTracking = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await fetch('/api/tracking', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...trackingForm, quantity: Number(trackingForm.quantity), value: Number(trackingForm.value) })
+      });
+      if (!res.ok) throw new Error('Failed to create tracking');
+      setTrackingForm({ order_no: '', quantity: '', value: '', delivery_country: '' });
+      setShowCreateTracking(false);
+      fetchTrackings();
+      alert('Tracking created!');
+    } catch (err) {
+      alert(err.message);
+    }
+  };
+
+  const handleUpdateTracking = async (e) => {
+    e.preventDefault();
+    if (!updateForm.order_no) return alert('Select an order to update');
+    try {
+      const res = await fetch('/api/tracking', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updateForm)
+      });
+      if (!res.ok) throw new Error('Failed to update tracking');
+      setUpdateForm({ order_no: '', new_status: '', location: '', message: '' });
+      fetchTrackings();
+      alert('Tracking updated!');
+    } catch (err) {
+      alert(err.message);
+    }
+  };
+
   return (
     <div className="admin-layout">
       <aside className="admin-sidebar">
@@ -141,6 +200,9 @@ const AdminPanel = () => {
           </button>
           <button className={`nav-item ${activeTab === 'inventory' ? 'active' : ''}`} onClick={() => setActiveTab('inventory')}>
             <Archive size={20} /> Inventory
+          </button>
+          <button className={`nav-item ${activeTab === 'tracking' ? 'active' : ''}`} onClick={() => setActiveTab('tracking')}>
+            <MapPin size={20} /> Tracking
           </button>
           <button className={`nav-item ${activeTab === 'products' ? 'active' : ''}`} onClick={() => setActiveTab('products')}>
             <ShoppingCart size={20} /> Add Product
@@ -301,6 +363,78 @@ const AdminPanel = () => {
                   ))}
                   {inventory.length === 0 && (
                     <tr><td colSpan="5" style={{textAlign: 'center'}}>No inventory variants found for this product.</td></tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          )}
+
+          {activeTab === 'tracking' && (
+            <div className="admin-card">
+              <div className="card-header" style={{ marginBottom: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <h2>Tracking Management</h2>
+                <button className="btn btn-primary" onClick={() => setShowCreateTracking(!showCreateTracking)}>
+                  {showCreateTracking ? 'Cancel' : '+ Create Shipment'}
+                </button>
+              </div>
+
+              {showCreateTracking && (
+                <form className="admin-form" onSubmit={handleCreateTracking} style={{background: '#fafafa', padding: '20px', borderRadius: '8px', marginBottom: '20px'}}>
+                  <h3>Create New Shipment</h3>
+                  <div style={{display: 'flex', gap: '15px', marginBottom: '15px'}}>
+                    <div className="form-group" style={{flex: 1}}><label>Order No</label><input type="text" value={trackingForm.order_no} onChange={e => setTrackingForm({...trackingForm, order_no: e.target.value})} required /></div>
+                    <div className="form-group" style={{flex: 1}}><label>Quantity</label><input type="number" value={trackingForm.quantity} onChange={e => setTrackingForm({...trackingForm, quantity: e.target.value})} required /></div>
+                    <div className="form-group" style={{flex: 1}}><label>Total Value ($)</label><input type="number" step="0.01" value={trackingForm.value} onChange={e => setTrackingForm({...trackingForm, value: e.target.value})} required /></div>
+                    <div className="form-group" style={{flex: 1}}><label>Destination Country</label><input type="text" value={trackingForm.delivery_country} onChange={e => setTrackingForm({...trackingForm, delivery_country: e.target.value})} required /></div>
+                  </div>
+                  <button type="submit" className="btn btn-primary">Create Shipment Record</button>
+                </form>
+              )}
+
+              <div style={{background: '#fafafa', padding: '20px', borderRadius: '8px', marginBottom: '30px'}}>
+                <h3>Add Tracking Update</h3>
+                <form onSubmit={handleUpdateTracking} style={{display: 'flex', gap: '15px', alignItems: 'flex-end', marginTop: '15px'}}>
+                  <div className="form-group" style={{flex: 1}}>
+                    <label>Select Order</label>
+                    <select className="form-control" value={updateForm.order_no} onChange={e => setUpdateForm({...updateForm, order_no: e.target.value})} required>
+                      <option value="">Select...</option>
+                      {trackings.map(t => <option key={t.id} value={t.order_no}>{t.order_no}</option>)}
+                    </select>
+                  </div>
+                  <div className="form-group" style={{flex: 1}}>
+                    <label>New Status (Short)</label>
+                    <input type="text" placeholder="e.g. In Transit" value={updateForm.new_status} onChange={e => setUpdateForm({...updateForm, new_status: e.target.value})} required />
+                  </div>
+                  <div className="form-group" style={{flex: 1}}>
+                    <label>Location</label>
+                    <input type="text" placeholder="e.g. NY Hub" value={updateForm.location} onChange={e => setUpdateForm({...updateForm, location: e.target.value})} required />
+                  </div>
+                  <div className="form-group" style={{flex: 2}}>
+                    <label>Detailed Message</label>
+                    <input type="text" placeholder="e.g. Package arrived at local carrier facility" value={updateForm.message} onChange={e => setUpdateForm({...updateForm, message: e.target.value})} required />
+                  </div>
+                  <button type="submit" className="btn btn-primary" style={{padding: '12px 24px'}}>Update</button>
+                </form>
+              </div>
+
+              <h3>Active Shipments</h3>
+              <table className="admin-table">
+                <thead>
+                  <tr><th>Order No</th><th>Destination</th><th>Qty</th><th>Value</th><th>Current Status</th><th>Last Updated</th></tr>
+                </thead>
+                <tbody>
+                  {trackings.map(t => (
+                    <tr key={t.id}>
+                      <td><strong>{t.order_no}</strong></td>
+                      <td>{t.delivery_country}</td>
+                      <td>{t.quantity}</td>
+                      <td>${Number(t.value).toFixed(2)}</td>
+                      <td><span className="status-badge pending">{t.current_status}</span></td>
+                      <td>{new Date(t.created_at).toLocaleString()}</td>
+                    </tr>
+                  ))}
+                  {trackings.length === 0 && (
+                    <tr><td colSpan="6" style={{textAlign: 'center'}}>No shipments tracked yet.</td></tr>
                   )}
                 </tbody>
               </table>

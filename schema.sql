@@ -97,3 +97,16 @@ CREATE TABLE Messages (
     message TEXT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+DROP TABLE IF EXISTS Tracking;
+
+CREATE TABLE Tracking (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    order_no TEXT UNIQUE NOT NULL,
+    quantity INTEGER,
+    value REAL,
+    delivery_country TEXT,
+    current_status TEXT,
+    tracking_history TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

@@ -11,6 +11,7 @@ import CheckoutPage from './pages/CheckoutPage';
 import LoginPage from './pages/LoginPage';
 import AdminPanel from './pages/AdminPanel';
 import BuyerPanel from './pages/BuyerPanel';
+import TrackingPage from './pages/TrackingPage';
 import './App.css';
 
 function App() {
@@ -29,6 +30,7 @@ function App() {
           <Route path="/checkout" element={<CheckoutPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/admin" element={<AdminPanel />} />
+          <Route path="/tracking" element={<TrackingPage />} />
           <Route path="/dashboard" element={<BuyerPanel />} />
         </Routes>
       </main>

@@ -1,0 +1,230 @@
+.tracking-page {
+  min-height: 80vh;
+  padding: 60px 0 100px;
+}
+
+.tracking-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.tracking-header h1 {
+  font-family: 'Georgia', serif;
+  font-size: 2.5rem;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+}
+
+.tracking-header p {
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+}
+
+.tracking-search-card {
+  max-width: 700px;
+  margin: 0 auto 40px;
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+}
+
+.tracking-form {
+  display: flex;
+  gap: 15px;
+}
+
+.search-input-wrapper {
+  position: relative;
+  flex: 1;
+}
+
+.search-icon {
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-secondary);
+}
+
+.tracking-input {
+  width: 100%;
+  padding: 16px 16px 16px 48px;
+  font-size: 1.1rem;
+  border: 2px solid var(--border-muted);
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+
+.tracking-input:focus {
+  outline: none;
+  border-color: var(--accent-gold);
+}
+
+.tracking-btn {
+  padding: 16px 32px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  background-color: var(--text-primary);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  white-space: nowrap;
+}
+
+.tracking-btn:hover {
+  background-color: #000;
+}
+
+.tracking-btn:disabled {
+  background-color: var(--text-secondary);
+  cursor: not-allowed;
+}
+
+.tracking-error {
+  max-width: 700px;
+  margin: 0 auto 40px;
+  background-color: #fff3f3;
+  border-left: 4px solid #ef4444;
+  padding: 16px;
+  border-radius: 8px;
+  color: #b91c1c;
+  text-align: center;
+}
+
+.tracking-results-card {
+  max-width: 900px;
+  margin: 0 auto;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.06);
+  overflow: hidden;
+}
+
+.tracking-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 20px;
+  padding: 30px;
+  background-color: #fafafa;
+  border-bottom: 1px solid var(--border-muted);
+}
+
+.summary-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.summary-label {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+}
+
+.summary-value {
+  font-size: 1.1rem;
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.summary-value.highlight {
+  color: var(--accent-gold);
+  font-weight: 700;
+}
+
+.tracking-timeline-container {
+  padding: 40px;
+}
+
+.tracking-timeline-container h3 {
+  font-family: 'Georgia', serif;
+  font-size: 1.5rem;
+  margin-bottom: 30px;
+  color: var(--text-primary);
+}
+
+.timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.timeline-item {
+  display: flex;
+  gap: 20px;
+  position: relative;
+}
+
+.timeline-item:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  left: 10px;
+  top: 30px;
+  bottom: -20px;
+  width: 2px;
+  background-color: var(--border-muted);
+}
+
+.timeline-marker {
+  width: 24px;
+  height: 24px;
+  background: white;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.timeline-content {
+  flex: 1;
+  background: #f9f9f9;
+  padding: 16px 20px;
+  border-radius: 8px;
+  border: 1px solid #f0f0f0;
+}
+
+.timeline-item:first-child .timeline-content {
+  background: white;
+  border: 1px solid var(--accent-gold);
+  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.1);
+}
+
+.timeline-date {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+}
+
+.timeline-message {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.timeline-location {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+@media (max-width: 768px) {
+  .tracking-form {
+    flex-direction: column;
+  }
+  
+  .tracking-btn {
+    width: 100%;
+  }
+
+  .tracking-summary {
+    grid-template-columns: 1fr 1fr;
+  }
+}
