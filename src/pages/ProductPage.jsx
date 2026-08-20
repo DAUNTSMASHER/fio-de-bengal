@@ -122,7 +122,37 @@ const ProductPage = () => {
           <div className="main-image">
             <img src={product.image || '/design_assets/fio_main_logo.png'} alt={product.name} className="product-main-img" />
           </div>
+
+          {/* Integrated Model Availability Table - Moved to Left Column for Symmetry */}
+          <div className="integrated-inventory" style={{marginTop: '40px'}}>
+            <h3 style={{marginBottom: '15px'}}>Current Model Availability</h3>
+            <div className="inventory-card" style={{padding: 0, overflow: 'hidden'}}>
+              <table className="inventory-table" style={{width: '100%', borderCollapse: 'collapse'}}>
+                <thead style={{background: '#f8f8f8', textAlign: 'left'}}>
+                  <tr>
+                    <th style={{padding: '12px 16px', borderBottom: '1px solid #eee'}}>Base Size</th>
+                    <th style={{padding: '12px 16px', borderBottom: '1px solid #eee'}}>Length</th>
+                    <th style={{padding: '12px 16px', borderBottom: '1px solid #eee'}}>Color</th>
+                    <th style={{padding: '12px 16px', borderBottom: '1px solid #eee'}}>Stock</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {inventory.length > 0 ? inventory.map(item => (
+                    <tr key={item.id} style={{borderBottom: '1px solid #eee'}}>
+                      <td style={{padding: '12px 16px'}}>{item.base_size}</td>
+                      <td style={{padding: '12px 16px'}}>{item.length}</td>
+                      <td style={{padding: '12px 16px'}}>{item.color}</td>
+                      <td style={{padding: '12px 16px'}}><span className="stock-badge" style={{background: '#e6fffa', color: '#008060', padding: '4px 10px', borderRadius: '12px', fontSize: '0.85rem', fontWeight: 'bold'}}>{item.quantity}</span></td>
+                    </tr>
+                  )) : (
+                    <tr><td colSpan="4" style={{padding: '20px', textAlign: 'center'}}>No inventory data found.</td></tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
+        
         <div className="product-info-panel">
           <h1 className="product-title">{product.name}</h1>
           <p className="product-sku">SKU: {product.sku}</p>
@@ -177,36 +207,6 @@ const ProductPage = () => {
               </div>
             )}
           </div>
-          
-          {/* Integrated Model Availability Table */}
-          <div className="integrated-inventory" style={{marginTop: '40px'}}>
-            <h3 style={{marginBottom: '15px'}}>Current Model Availability</h3>
-            <div className="inventory-card" style={{padding: 0, overflow: 'hidden'}}>
-              <table className="inventory-table" style={{width: '100%', borderCollapse: 'collapse'}}>
-                <thead style={{background: '#f8f8f8', textAlign: 'left'}}>
-                  <tr>
-                    <th style={{padding: '12px 16px', borderBottom: '1px solid #eee'}}>Base Size</th>
-                    <th style={{padding: '12px 16px', borderBottom: '1px solid #eee'}}>Length</th>
-                    <th style={{padding: '12px 16px', borderBottom: '1px solid #eee'}}>Color</th>
-                    <th style={{padding: '12px 16px', borderBottom: '1px solid #eee'}}>Stock (approx.)</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {inventory.length > 0 ? inventory.map(item => (
-                    <tr key={item.id} style={{borderBottom: '1px solid #eee'}}>
-                      <td style={{padding: '12px 16px'}}>{item.base_size}</td>
-                      <td style={{padding: '12px 16px'}}>{item.length}</td>
-                      <td style={{padding: '12px 16px'}}>{item.color}</td>
-                      <td style={{padding: '12px 16px'}}><span className="stock-badge" style={{background: '#e6fffa', color: '#008060', padding: '4px 10px', borderRadius: '12px', fontSize: '0.85rem', fontWeight: 'bold'}}>{item.quantity}</span></td>
-                    </tr>
-                  )) : (
-                    <tr><td colSpan="4" style={{padding: '20px', textAlign: 'center'}}>No inventory data found.</td></tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
-          </div>
-          
         </div>
       </div>
 
