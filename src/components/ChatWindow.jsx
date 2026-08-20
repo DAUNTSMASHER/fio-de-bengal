@@ -113,12 +113,18 @@ const ChatWindow = ({ inquiry, currentUser, onOfferSent, onDealFinalized }) => {
     }
   };
 
+  const [showCheckout, setShowCheckout] = useState(false);
+  const [shippingAddress, setShippingAddress] = useState('');
+
   const handleFinalizeDeal = async () => {
+    if (!shippingAddress.trim()) {
+      return alert("Please enter your shipping address to complete the checkout.");
+    }
     try {
       await fetch('/api/inquiries', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: inquiry.id, status: 'Completed' })
+        body: JSON.stringify({ id: inquiry.id, status: 'Completed', shipping_address: shippingAddress })
       });
       
       await fetch('/api/messages', {
@@ -128,11 +134,12 @@ const ChatWindow = ({ inquiry, currentUser, onOfferSent, onDealFinalized }) => {
           inquiry_id: inquiry.id,
           sender_role: 'system',
           sender_name: 'System',
-          message: `DEAL FINALIZED at $${inquiry.final_price.toFixed(2)}. Proceeding to checkout/fulfillment.`
+          message: `DEAL COMPLETED at $${inquiry.final_price.toFixed(2)}. Shipping to: ${shippingAddress}`
         })
       });
       
-      alert("Deal Finalized! Redirecting to checkout...");
+      alert("Checkout Successful! Your B2B order has been finalized.");
+      setShowCheckout(false);
       if (onDealFinalized) onDealFinalized();
     } catch (err) {
       alert("Error finalizing deal");
@@ -202,9 +209,32 @@ const ChatWindow = ({ inquiry, currentUser, onOfferSent, onDealFinalized }) => {
           )}
 
           {currentUser.role === 'buyer' && inquiry.status === 'Offer Sent' && (
-            <div className="buyer-finalize-bar">
-              <p>Admin sent a final offer of <strong>${Number(inquiry.final_price).toFixed(2)}</strong>.</p>
-              <button className="btn btn-primary" onClick={handleFinalizeDeal}>Finalize & Checkout</button>
+            <div className="buyer-finalize-bar" style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+              {!showCheckout ? (
+                <>
+                  <p>Admin sent a final offer of <strong>${Number(inquiry.final_price).toFixed(2)}</strong>.</p>
+                  <button className="btn btn-primary" onClick={() => setShowCheckout(true)}>Accept & Checkout</button>
+                </>
+              ) : (
+                <div className="checkout-form" style={{ background: '#fff', padding: '20px', borderRadius: '12px', border: '1px solid #ddd' }}>
+                  <h4>B2B Checkout</h4>
+                  <p style={{marginBottom: '10px'}}>Total Due: <strong>${(inquiry.final_price * inquiry.quantity).toFixed(2)}</strong></p>
+                  <div className="form-group">
+                    <label>Shipping / Account Information</label>
+                    <textarea 
+                      className="form-control" 
+                      rows="3"
+                      placeholder="Enter full shipping address, company name, and contact details..."
+                      value={shippingAddress}
+                      onChange={(e) => setShippingAddress(e.target.value)}
+                    ></textarea>
+                  </div>
+                  <div style={{display: 'flex', gap: '10px', marginTop: '10px'}}>
+                    <button className="btn btn-outline" onClick={() => setShowCheckout(false)}>Cancel</button>
+                    <button className="btn btn-primary" onClick={handleFinalizeDeal}>Submit Payment & Complete</button>
+                  </div>
+                </div>
+              )}
             </div>
           )}
 

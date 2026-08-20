@@ -4,6 +4,7 @@ import Navbar from './components/Navbar';
 import WhatsAppButton from './components/WhatsAppButton';
 import Footer from './components/Footer';
 import HomePage from './pages/HomePage';
+import ProductsPage from './pages/ProductsPage';
 import ProductPage from './pages/ProductPage';
 import CartPage from './pages/CartPage';
 import CheckoutPage from './pages/CheckoutPage';
@@ -22,6 +23,7 @@ function App() {
       <main style={isDashboard ? { minHeight: '100vh', padding: 0 } : {}}>
         <Routes>
           <Route path="/" element={<HomePage />} />
+          <Route path="/products" element={<ProductsPage />} />
           <Route path="/product/:id" element={<ProductPage />} />
           <Route path="/cart" element={<CartPage />} />
           <Route path="/checkout" element={<CheckoutPage />} />

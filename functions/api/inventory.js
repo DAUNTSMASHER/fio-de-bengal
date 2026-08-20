@@ -12,18 +12,34 @@ export async function onRequestGet(context) {
       { id: 6, category: 'color', label: '#2', quantity: '100-120' },
       { id: 7, category: 'color', label: '#1B', quantity: '200-230' },
       { id: 8, category: 'density', label: '60-90', quantity: '100-120' },
-      { id: 9, category: 'density', label: '95-110', quantity: '100-120' },
-      { id: 10, category: 'density', label: '115-130', quantity: '200-230' }
-    ];
+    const { env, request } = context;
+    const url = new URL(request.url);
+    const productId = url.searchParams.get('product_id');
 
-    if (env.DB) {
-      const { results } = await env.DB.prepare("SELECT * FROM Inventory ORDER BY id ASC").all();
-      if (results && results.length > 0) {
-        inventory = results;
-      }
+    let result;
+    if (productId) {
+      result = await env.DB.prepare("SELECT * FROM Inventory WHERE product_id = ?").bind(productId).all();
+    } else {
+      result = await env.DB.prepare("SELECT * FROM Inventory").all();
     }
 
-    return new Response(JSON.stringify(inventory), {
+    return new Response(JSON.stringify(result.results), {
+      headers: { "Content-Type": "application/json" }
+    });
+  } catch (err) {
+    return new Response(JSON.stringify({ error: err.message }), { status: 500 });
+  }
+}
+
+export async function onRequestPost(context) {
+  try {
+    const { request, env } = context;
+    const { product_id, category, label, quantity } = await request.json();
+    const result = await env.DB.prepare(
+      "INSERT INTO Inventory (product_id, category, label, quantity) VALUES (?, ?, ?, ?) RETURNING *"
+    ).bind(product_id, category, label, quantity).first();
+
+    return new Response(JSON.stringify(result), {
       headers: { "Content-Type": "application/json" }
     });
   } catch (err) {
@@ -34,21 +50,12 @@ export async function onRequestGet(context) {
 export async function onRequestPut(context) {
   try {
     const { request, env } = context;
-    const body = await request.json(); // Expected: { id, quantity }
+    const { id, quantity } = await request.json();
+    const result = await env.DB.prepare(
+      "UPDATE Inventory SET quantity = ? WHERE id = ? RETURNING *"
+    ).bind(quantity, id).first();
 
-    if (!env.DB) {
-      // Fake success for development if DB isn't bound yet
-      return new Response(JSON.stringify({ success: true, updated: body }), {
-        headers: { "Content-Type": "application/json" }
-      });
-    }
-
-    const { success } = await env.DB.prepare(
-      "UPDATE Inventory SET quantity = ? WHERE id = ?"
-    )
-    .bind(body.quantity, body.id).run();
-
-    return new Response(JSON.stringify({ success }), {
+    return new Response(JSON.stringify(result), {
       headers: { "Content-Type": "application/json" }
     });
   } catch (err) {

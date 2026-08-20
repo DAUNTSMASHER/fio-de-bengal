@@ -67,6 +67,10 @@ export async function onRequestPut(context) {
         query += ", final_price = ?";
         binds.push(body.final_price);
       }
+      if (body.shipping_address !== undefined) {
+        query += ", shipping_address = ?";
+        binds.push(body.shipping_address);
+      }
       query += " WHERE id = ?";
       binds.push(body.id);
 

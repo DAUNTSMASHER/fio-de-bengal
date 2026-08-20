@@ -35,9 +35,8 @@ const Navbar = () => {
         </Link>
         
         <nav className={`navbar-links ${isOpen ? 'active' : ''}`}>
-          <Link to="/" onClick={() => setIsOpen(false)}>PRODUCTS</Link>
-          <a href="#about" onClick={() => setIsOpen(false)}>ABOUT US</a>
-          <a href="#contact" onClick={() => setIsOpen(false)}>CONTACT</a>
+          <Link to="/" onClick={() => setIsOpen(false)}>HOME</Link>
+          <Link to="/products" onClick={() => setIsOpen(false)}>PRODUCTS</Link>
           
           <Link to="/cart" className="cart-icon-wrapper" onClick={() => setIsOpen(false)}>
             <ShoppingBag size={24} color="var(--text-primary)" strokeWidth={1.5} />

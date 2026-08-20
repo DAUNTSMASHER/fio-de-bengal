@@ -7,7 +7,7 @@ const HomePage = () => {
   return (
     <div className="home-page">
       <Hero />
-      <ProductGrid />
+      <ProductGrid limit={3} />
       <ProductionProcess />
     </div>
   );

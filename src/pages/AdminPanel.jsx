@@ -231,8 +231,18 @@ const AdminPanel = () => {
 
           {activeTab === 'inventory' && (
             <div className="admin-card">
-              <div className="card-header" style={{ marginBottom: '20px' }}>
-                <h2>Global Inventory Management</h2>
+              <div className="card-header" style={{ marginBottom: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <h2>Model Inventory</h2>
+                <select 
+                  className="form-control" 
+                  style={{ width: '250px', padding: '10px' }}
+                  value={selectedProductId}
+                  onChange={(e) => setSelectedProductId(Number(e.target.value))}
+                >
+                  {products.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
+                </select>
+              </div>
+              <div style={{ marginBottom: '20px' }}>
                 <div className="inventory-tabs">
                   <button className={`btn ${activeInventoryTab === 'base' ? 'btn-primary' : 'btn-outline'}`} onClick={() => setActiveInventoryTab('base')}>Base Sizes</button>
                   <button className={`btn ${activeInventoryTab === 'color' ? 'btn-primary' : 'btn-outline'}`} style={{ margin: '0 10px' }} onClick={() => setActiveInventoryTab('color')}>Colors</button>
@@ -281,7 +291,7 @@ const AdminPanel = () => {
               <h2>Finalized Deals</h2>
               <table className="admin-table">
                 <thead>
-                  <tr><th>Order ID</th><th>Buyer</th><th>Product</th><th>Final Price</th><th>Status</th></tr>
+                  <tr><th>Order ID</th><th>Buyer</th><th>Product</th><th>Final Price</th><th>Shipping Info</th><th>Status</th></tr>
                 </thead>
                 <tbody>
                   {inquiries.filter(i => i.status === 'Completed').map(inq => (
@@ -290,6 +300,7 @@ const AdminPanel = () => {
                       <td>{inq.buyer_email}</td>
                       <td>{inq.product_name} ({inq.quantity}x)</td>
                       <td>${(inq.final_price * inq.quantity).toFixed(2)}</td>
+                      <td style={{ maxWidth: '200px', whiteSpace: 'pre-wrap', fontSize: '0.9rem' }}>{inq.shipping_address || 'N/A'}</td>
                       <td><span className="status-badge delivered">Paid & Shipped</span></td>
                     </tr>
                   ))}

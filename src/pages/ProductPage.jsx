@@ -46,8 +46,8 @@ const ProductPage = () => {
         setLoading(false);
       });
 
-    // Fetch inventory
-    fetch(`/api/inventory?t=${new Date().getTime()}`)
+    // Fetch inventory for specific product
+    fetch(`/api/inventory?product_id=${id}&t=${new Date().getTime()}`)
       .then(res => res.json())
       .then(data => setInventory(data || []))
       .catch(err => console.error("Error fetching inventory", err));
@@ -179,9 +179,9 @@ const ProductPage = () => {
         </div>
       </div>
       
-      {/* Global Inventory Section */}
+      {/* Model-Specific Inventory Section */}
       <div className="container inventory-section">
-        <h2 className="inventory-section-title">Current Global Availability</h2>
+        <h2 className="inventory-section-title">Current Model Availability</h2>
         <div className="inventory-tables-grid">
           <div className="inventory-card">
             <h3>Base Sizes</h3>
