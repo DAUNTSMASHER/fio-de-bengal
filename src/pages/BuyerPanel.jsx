@@ -82,7 +82,7 @@ const BuyerPanel = () => {
                   {inquiries.length === 0 ? (
                     <div style={{padding: '40px', textAlign: 'center', background: '#fff', borderRadius: '12px'}}>
                       <p>You have no active negotiations.</p>
-                      <button className="btn btn-primary" onClick={() => navigate('/products')}>Browse Products</button>
+                      <button className="btn btn-primary" onClick={() => navigate('/')}>Browse Products</button>
                     </div>
                   ) : (
                     <div className="orders-list">
