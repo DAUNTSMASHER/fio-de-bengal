@@ -14,14 +14,17 @@
   padding: 32px 40px;
   border-radius: 12px;
   box-shadow: 0 16px 48px rgba(0,0,0,0.04);
+  align-items: stretch;
+}
+
+.product-image-gallery {
+  height: 100%;
 }
 
 .product-image-gallery .main-image {
   width: 100%;
-  max-width: 450px;
-  margin: 0 auto;
-  aspect-ratio: 1 / 1;
-  background-color: #FFFFFF; /* Force pure white background for uniformity */
+  height: 100%;
+  background-color: #FFFFFF;
   border-radius: 16px;
   overflow: hidden;
   display: flex;
