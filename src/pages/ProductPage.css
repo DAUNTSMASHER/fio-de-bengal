@@ -19,7 +19,7 @@
 .product-image-gallery .main-image {
   width: 100%;
   aspect-ratio: 4/5;
-  background-color: var(--surface-bg);
+  background-color: #FFFFFF; /* Force pure white background for uniformity */
   border-radius: 16px;
   overflow: hidden;
   display: flex;

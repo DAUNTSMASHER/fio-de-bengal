@@ -10,13 +10,12 @@
   transform: translateY(-4px);
   box-shadow: 0 12px 24px rgba(17, 18, 19, 0.05);
 }
-
 .product-image-wrapper {
   position: relative;
   width: 100%;
   aspect-ratio: 1;
   overflow: hidden;
-  background-color: var(--surface-bg);
+  background-color: #FFFFFF; /* Force pure white background for uniformity */
 }
 
 .product-image {
