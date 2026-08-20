@@ -180,13 +180,11 @@ const ProductPage = () => {
             )}
           </div>
         </div>
-      </div>
 
-      {/* Full-width Integrated Model Availability Table */}
-      <div className="container" style={{marginTop: '40px'}}>
-        <div className="integrated-inventory">
+        {/* Full-width Integrated Model Availability Table */}
+        <div className="integrated-inventory" style={{marginTop: '20px', gridColumn: '1 / -1'}}>
           <h3 style={{marginBottom: '15px', color: 'var(--text-primary)', borderBottom: '2px solid var(--accent-gold)', display: 'inline-block', paddingBottom: '4px'}}>Current Model Availability</h3>
-          <div className="inventory-card" style={{padding: 0, overflow: 'hidden', backgroundColor: 'white', borderRadius: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.05)'}}>
+          <div className="inventory-card" style={{padding: 0, overflow: 'hidden', border: '1px solid var(--border-muted)', borderRadius: '12px'}}>
             <div className="inventory-table-container">
               <table className="inventory-table">
                 <thead>
