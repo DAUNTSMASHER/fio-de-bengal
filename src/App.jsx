@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import WhatsAppButton from './components/WhatsAppButton';
 import Footer from './components/Footer';
@@ -13,10 +13,13 @@ import BuyerPanel from './pages/BuyerPanel';
 import './App.css';
 
 function App() {
+  const location = useLocation();
+  const isDashboard = location.pathname.startsWith('/admin') || location.pathname.startsWith('/dashboard');
+
   return (
     <div className="app-wrapper">
-      <Navbar />
-      <main>
+      {!isDashboard && <Navbar />}
+      <main style={isDashboard ? { minHeight: '100vh', padding: 0 } : {}}>
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/product/:id" element={<ProductPage />} />
@@ -27,8 +30,8 @@ function App() {
           <Route path="/dashboard" element={<BuyerPanel />} />
         </Routes>
       </main>
-      <Footer />
-      <WhatsAppButton />
+      {!isDashboard && <Footer />}
+      {!isDashboard && <WhatsAppButton />}
     </div>
   );
 }
