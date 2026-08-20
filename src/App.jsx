@@ -7,6 +7,9 @@ import HomePage from './pages/HomePage';
 import ProductPage from './pages/ProductPage';
 import CartPage from './pages/CartPage';
 import CheckoutPage from './pages/CheckoutPage';
+import LoginPage from './pages/LoginPage';
+import AdminPanel from './pages/AdminPanel';
+import BuyerPanel from './pages/BuyerPanel';
 import './App.css';
 
 function App() {
@@ -19,6 +22,9 @@ function App() {
           <Route path="/product/:id" element={<ProductPage />} />
           <Route path="/cart" element={<CartPage />} />
           <Route path="/checkout" element={<CheckoutPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/admin" element={<AdminPanel />} />
+          <Route path="/dashboard" element={<BuyerPanel />} />
         </Routes>
       </main>
       <Footer />

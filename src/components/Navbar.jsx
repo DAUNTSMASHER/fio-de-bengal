@@ -1,16 +1,24 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ShoppingBag, Menu, X } from 'lucide-react';
+import { ShoppingBag, Menu, X, User } from 'lucide-react';
 import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
 import './Navbar.css';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { getCartCount } = useCart();
+  const { user } = useAuth();
   const cartCount = getCartCount();
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
+  };
+
+  const getProfileLink = () => {
+    if (!user) return '/login';
+    if (user.role === 'admin') return '/admin';
+    return '/dashboard';
   };
 
   return (
@@ -34,6 +42,10 @@ const Navbar = () => {
           <Link to="/cart" className="cart-icon-wrapper" onClick={() => setIsOpen(false)}>
             <ShoppingBag size={24} color="var(--text-primary)" strokeWidth={1.5} />
             {cartCount > 0 && <span className="cart-badge">{cartCount}</span>}
+          </Link>
+
+          <Link to={getProfileLink()} className="auth-icon-wrapper" onClick={() => setIsOpen(false)} style={{marginLeft: '8px', display: 'flex', alignItems: 'center', color: 'var(--text-primary)'}}>
+            <User size={24} strokeWidth={1.5} />
           </Link>
         </nav>
 
