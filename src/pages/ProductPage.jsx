@@ -127,28 +127,36 @@ const ProductPage = () => {
           <div className="integrated-inventory" style={{marginTop: '40px'}}>
             <h3 style={{marginBottom: '15px'}}>Current Model Availability</h3>
             <div className="inventory-card" style={{padding: 0, overflow: 'hidden'}}>
-              <table className="inventory-table" style={{width: '100%', borderCollapse: 'collapse'}}>
-                <thead style={{background: '#f8f8f8', textAlign: 'left'}}>
-                  <tr>
-                    <th style={{padding: '12px 16px', borderBottom: '1px solid #eee'}}>Base Size</th>
-                    <th style={{padding: '12px 16px', borderBottom: '1px solid #eee'}}>Length</th>
-                    <th style={{padding: '12px 16px', borderBottom: '1px solid #eee'}}>Color</th>
-                    <th style={{padding: '12px 16px', borderBottom: '1px solid #eee'}}>Stock</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {inventory.length > 0 ? inventory.map(item => (
-                    <tr key={item.id} style={{borderBottom: '1px solid #eee'}}>
-                      <td style={{padding: '12px 16px'}}>{item.base_size}</td>
-                      <td style={{padding: '12px 16px'}}>{item.length}</td>
-                      <td style={{padding: '12px 16px'}}>{item.color}</td>
-                      <td style={{padding: '12px 16px'}}><span className="stock-badge" style={{background: '#e6fffa', color: '#008060', padding: '4px 10px', borderRadius: '12px', fontSize: '0.85rem', fontWeight: 'bold'}}>{item.quantity}</span></td>
+              <div style={{overflowX: 'auto'}}>
+                <table className="inventory-table" style={{width: '100%', borderCollapse: 'collapse', minWidth: '600px'}}>
+                  <thead style={{background: '#f8f8f8', textAlign: 'left'}}>
+                    <tr>
+                      <th style={{padding: '12px 16px', borderBottom: '1px solid #eee', whiteSpace: 'nowrap'}}>Base Size</th>
+                      <th style={{padding: '12px 16px', borderBottom: '1px solid #eee', whiteSpace: 'nowrap'}}>Length</th>
+                      <th style={{padding: '12px 16px', borderBottom: '1px solid #eee', whiteSpace: 'nowrap'}}>Color</th>
+                      <th style={{padding: '12px 16px', borderBottom: '1px solid #eee', whiteSpace: 'nowrap'}}>Processing Time</th>
+                      <th style={{padding: '12px 16px', borderBottom: '1px solid #eee', whiteSpace: 'nowrap'}}>Delivery Time</th>
+                      <th style={{padding: '12px 16px', borderBottom: '1px solid #eee', whiteSpace: 'nowrap'}}>Total Time</th>
+                      <th style={{padding: '12px 16px', borderBottom: '1px solid #eee', whiteSpace: 'nowrap'}}>Stock</th>
                     </tr>
-                  )) : (
-                    <tr><td colSpan="4" style={{padding: '20px', textAlign: 'center'}}>No inventory data found.</td></tr>
-                  )}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {inventory.length > 0 ? inventory.map(item => (
+                      <tr key={item.id} style={{borderBottom: '1px solid #eee'}}>
+                        <td style={{padding: '12px 16px'}}>{item.base_size}</td>
+                        <td style={{padding: '12px 16px'}}>{item.length}</td>
+                        <td style={{padding: '12px 16px'}}>{item.color}</td>
+                        <td style={{padding: '12px 16px'}}>3-5 Days</td>
+                        <td style={{padding: '12px 16px'}}>3-5 Days</td>
+                        <td style={{padding: '12px 16px'}}>6-10 Days</td>
+                        <td style={{padding: '12px 16px'}}><span className="stock-badge" style={{background: '#e6fffa', color: '#008060', padding: '4px 10px', borderRadius: '12px', fontSize: '0.85rem', fontWeight: 'bold'}}>{item.quantity}</span></td>
+                      </tr>
+                    )) : (
+                      <tr><td colSpan="7" style={{padding: '20px', textAlign: 'center'}}>No inventory data found.</td></tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>
