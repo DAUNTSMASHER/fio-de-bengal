@@ -6,8 +6,7 @@ const ProductCard = ({ product }) => {
   return (
     <Link to={`/product/${product.id || 1}`} className="product-card" style={{textDecoration: 'none'}}>
       <div className="product-image-wrapper">
-        {/* Placeholder for macro shots */}
-        <div className="product-image-placeholder"></div>
+        <img src={product.image} alt={product.name} className="product-image" />
         {product.isGuaranteed && (
           <div className="product-badge">
             <img src="/design_assets/fio_guarantee_badge.png" className="custom-icon guarantee-small-icon" alt="Guaranteed" />

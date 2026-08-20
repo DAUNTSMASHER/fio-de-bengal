@@ -9,6 +9,10 @@ const AdminPanel = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('dashboard');
   const [uploading, setUploading] = useState(false);
+  const [productName, setProductName] = useState('');
+  const [productPrice, setProductPrice] = useState('');
+  const [productDescription, setProductDescription] = useState('');
+  const [uploadedImageUrl, setUploadedImageUrl] = useState('');
 
   // Protect route
   if (!user || user.role !== 'admin') {
@@ -20,14 +24,59 @@ const AdminPanel = () => {
     navigate('/login');
   };
 
-  const handleImageUpload = (e) => {
+  const handleImageUpload = async (e) => {
     e.preventDefault();
+    const file = e.target.files[0];
+    if (!file) return;
+
     setUploading(true);
-    // Mock Cloudinary Upload Delay
-    setTimeout(() => {
-      setUploading(false);
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const res = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData
+      });
+      const data = await res.json();
+      
+      if (!res.ok) throw new Error(data.error || 'Upload failed');
+      
+      setUploadedImageUrl(data.url);
       alert('Image successfully uploaded to Cloudinary!');
-    }, 1500);
+    } catch (err) {
+      alert('Upload Error: ' + err.message);
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const handleProductSubmit = async (e) => {
+    e.preventDefault();
+    if (!productName || !productPrice) return alert("Name and price are required");
+
+    try {
+      const res = await fetch('/api/products', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: productName,
+          price: parseFloat(productPrice),
+          description: productDescription,
+          image: uploadedImageUrl
+        })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to save product');
+
+      alert("Product saved to database successfully!");
+      setProductName('');
+      setProductPrice('');
+      setProductDescription('');
+      setUploadedImageUrl('');
+    } catch (err) {
+      alert("Error saving product: " + err.message);
+    }
   };
 
   return (
@@ -84,21 +133,31 @@ const AdminPanel = () => {
               <div className="card-header">
                 <h2>Add New Product</h2>
               </div>
-              <form className="admin-form" onSubmit={(e) => e.preventDefault()}>
+              <form className="admin-form" onSubmit={handleProductSubmit}>
                 <div className="form-group">
                   <label>Product Name</label>
-                  <input type="text" placeholder="e.g. Raw Bengal Wavy Bundle" />
+                  <input type="text" placeholder="e.g. Raw Bengal Wavy Bundle" value={productName} onChange={e => setProductName(e.target.value)} required />
                 </div>
                 <div className="form-group">
                   <label>Price ($)</label>
-                  <input type="number" placeholder="150" />
+                  <input type="number" placeholder="150" value={productPrice} onChange={e => setProductPrice(e.target.value)} required />
+                </div>
+                <div className="form-group">
+                  <label>Description</label>
+                  <textarea placeholder="Product description..." value={productDescription} onChange={e => setProductDescription(e.target.value)} rows="3"></textarea>
                 </div>
                 <div className="form-group">
                   <label>Product Image (Cloudinary)</label>
                   <div className="upload-zone">
-                    <UploadCloud size={32} color="var(--border-muted)" />
-                    <p>Drag and drop image here, or click to browse</p>
-                    <input type="file" onChange={handleImageUpload} />
+                    {uploadedImageUrl ? (
+                       <img src={uploadedImageUrl} alt="Uploaded" style={{maxHeight: '150px'}} />
+                    ) : (
+                      <>
+                        <UploadCloud size={32} color="var(--border-muted)" />
+                        <p>Drag and drop image here, or click to browse</p>
+                        <input type="file" onChange={handleImageUpload} accept="image/*" />
+                      </>
+                    )}
                     {uploading && <p className="upload-status">Uploading to Cloudinary...</p>}
                   </div>
                 </div>

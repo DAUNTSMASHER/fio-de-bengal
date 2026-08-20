@@ -8,6 +8,10 @@ export async function onRequestPost(context) {
       return new Response(JSON.stringify({ error: "No file uploaded" }), { status: 400 });
     }
 
+    if (!env.CLOUDINARY_CLOUD_NAME) {
+      throw new Error("CLOUDINARY_CLOUD_NAME environment variable is not set.");
+    }
+
     // Cloudflare Pages Environment Variables for Cloudinary
     const CLOUDINARY_URL = `https://api.cloudinary.com/v1_1/${env.CLOUDINARY_CLOUD_NAME}/image/upload`;
     
