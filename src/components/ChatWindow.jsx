@@ -30,7 +30,7 @@ const ChatWindow = ({ inquiry, currentUser, onOfferSent, onDealFinalized }) => {
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+  }, [messages.length]);
 
   const handleSendMessage = async (e) => {
     e.preventDefault();
