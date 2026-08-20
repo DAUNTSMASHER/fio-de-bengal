@@ -15,10 +15,15 @@ const Hero = () => {
           </div>
         </div>
         <div className="hero-visual">
-          {/* Placeholder for high-end hero image or video */}
-          <div className="hero-placeholder">
-            <img src="/design_assets/fio_guarantee_badge.png" className="custom-icon guarantee-icon" alt="Guarantee" />
-            <p>Guaranteed Quality</p>
+          <div className="hero-video-wrapper">
+            <video 
+              src="/design_assets/hero_video.mp4" 
+              autoPlay 
+              loop 
+              muted 
+              playsInline
+              className="hero-video" 
+            />
           </div>
         </div>
       </div>
