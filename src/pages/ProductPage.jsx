@@ -15,10 +15,12 @@ const ProductPage = () => {
   const [length, setLength] = useState('18"');
   const [quantity, setQuantity] = useState(1);
 
+  const [inventory, setInventory] = useState([]);
+
   useEffect(() => {
     window.scrollTo(0, 0);
     
-    // Fetch all products (or a specific one) from API
+    // Fetch product
     fetch(`/api/products?t=${new Date().getTime()}`)
       .then(res => {
         if (!res.ok) throw new Error('Failed to fetch product');
@@ -37,6 +39,12 @@ const ProductPage = () => {
         setError(err.message);
         setLoading(false);
       });
+
+    // Fetch inventory
+    fetch(`/api/inventory?t=${new Date().getTime()}`)
+      .then(res => res.json())
+      .then(data => setInventory(data || []))
+      .catch(err => console.error("Error fetching inventory", err));
   }, [id]);
 
   if (loading) {
@@ -56,6 +64,10 @@ const ProductPage = () => {
     }, quantity, { length });
     navigate('/cart');
   };
+
+  const baseInventory = inventory.filter(i => i.category === 'base');
+  const colorInventory = inventory.filter(i => i.category === 'color');
+  const densityInventory = inventory.filter(i => i.category === 'density');
 
   return (
     <div className="page-layout texture-bengal-wave">
@@ -96,6 +108,62 @@ const ProductPage = () => {
             <p>{product.description}</p>
             <p className="moq-text"><strong>Minimum Order:</strong> {product.moq || '1 piece'}</p>
           </div>
+        </div>
+      </div>
+      
+      {/* Global Inventory Section */}
+      <div className="container inventory-section">
+        <h2 className="inventory-section-title">Current Global Availability</h2>
+        <div className="inventory-tables-grid">
+          
+          {/* Base Sizes Table */}
+          <div className="inventory-card">
+            <h3>Base Sizes</h3>
+            <table className="inventory-table">
+              <thead><tr><th>Base</th><th>Stock (approx.)</th></tr></thead>
+              <tbody>
+                {baseInventory.map(item => (
+                  <tr key={item.id}>
+                    <td>{item.label}</td>
+                    <td><span className="stock-badge">{item.quantity}</span></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Colors Table */}
+          <div className="inventory-card">
+            <h3>Colors</h3>
+            <table className="inventory-table">
+              <thead><tr><th>Color</th><th>Stock (approx.)</th></tr></thead>
+              <tbody>
+                {colorInventory.map(item => (
+                  <tr key={item.id}>
+                    <td>{item.label}</td>
+                    <td><span className="stock-badge">{item.quantity}</span></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Density Table */}
+          <div className="inventory-card">
+            <h3>Density</h3>
+            <table className="inventory-table">
+              <thead><tr><th>Density</th><th>Stock (approx.)</th></tr></thead>
+              <tbody>
+                {densityInventory.map(item => (
+                  <tr key={item.id}>
+                    <td>{item.label}</td>
+                    <td><span className="stock-badge">{item.quantity}</span></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
         </div>
       </div>
     </div>

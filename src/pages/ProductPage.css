@@ -88,3 +88,16 @@
     padding: 24px;
   }
 }
+
+/* Inventory Section */
+.inventory-section { margin-top: 64px; padding-top: 48px; border-top: 1px solid var(--border-muted); }
+.inventory-section-title { font-size: 1.5rem; margin-bottom: 24px; text-align: center; }
+.inventory-tables-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; }
+@media (max-width: 992px) { .inventory-tables-grid { grid-template-columns: 1fr; } }
+.inventory-card { background: var(--surface-bg); border-radius: 12px; padding: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+.inventory-card h3 { margin-bottom: 16px; font-size: 1.2rem; color: var(--text-primary); border-bottom: 2px solid var(--accent-gold); display: inline-block; padding-bottom: 4px; }
+.inventory-table { width: 100%; border-collapse: collapse; }
+.inventory-table th { text-align: left; padding: 12px 8px; border-bottom: 1px solid var(--border-muted); color: var(--text-secondary); font-weight: 600; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px; }
+.inventory-table td { padding: 12px 8px; border-bottom: 1px solid var(--border-muted); color: var(--text-primary); font-size: 1rem; }
+.inventory-table tr:last-child td { border-bottom: none; }
+.stock-badge { background-color: #E8F5E9; color: #2E7D32; padding: 4px 8px; border-radius: 4px; font-size: 0.85rem; font-weight: 600; display: inline-block; }
