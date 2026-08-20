@@ -42,9 +42,12 @@ const BuyerPanel = () => {
   return (
     <div className="admin-layout">
       <aside className="admin-sidebar">
-        <div className="sidebar-brand">
-          <h2>FIO DE BENGAL</h2>
-          <span className="badge admin-badge" style={{background: 'var(--accent-gold)'}}>BUYER</span>
+        <div className="sidebar-brand-box">
+          <img src="/design_assets/fio_tiger_icon.png" alt="Tiger" className="sidebar-tiger-icon" />
+          <div className="sidebar-brand-text">
+            <span>FIO DE</span>
+            <span>BENGAL</span>
+          </div>
         </div>
         <nav className="sidebar-nav">
           <button className={`nav-item ${activeTab === 'negotiations' ? 'active' : ''}`} onClick={() => { setActiveTab('negotiations'); setActiveInquiry(null); }}>
