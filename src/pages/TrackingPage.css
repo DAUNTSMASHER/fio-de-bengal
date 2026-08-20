@@ -230,9 +230,9 @@
 }
 
 .live-dummy-orders {
-  max-width: 900px;
-  margin: 40px auto 0;
-  padding-top: 40px;
+  max-width: 1000px;
+  margin: 50px auto 0;
+  padding-top: 50px;
   border-top: 1px solid rgba(0,0,0,0.05);
 }
 
@@ -241,9 +241,9 @@
   align-items: center;
   gap: 12px;
   font-family: 'Georgia', serif;
-  font-size: 1.5rem;
+  font-size: 1.6rem;
   color: var(--text-primary);
-  margin-bottom: 24px;
+  margin-bottom: 28px;
 }
 
 .pulsing-dot {
@@ -265,19 +265,19 @@
   background: white;
   border-radius: 12px;
   overflow-x: auto;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+  box-shadow: 0 6px 24px rgba(0,0,0,0.04);
   border: 1px solid var(--border-muted);
 }
 
 .dummy-orders-table {
   width: 100%;
   border-collapse: collapse;
-  min-width: 600px;
+  min-width: 700px;
 }
 
 .dummy-orders-table th {
   text-align: left;
-  padding: 16px 20px;
+  padding: 20px 24px;
   background-color: #fafafa;
   color: var(--text-secondary);
   font-weight: 600;
@@ -288,10 +288,10 @@
 }
 
 .dummy-orders-table td {
-  padding: 16px 20px;
+  padding: 20px 24px;
   border-bottom: 1px solid rgba(0,0,0,0.04);
   color: var(--text-primary);
-  font-size: 0.95rem;
+  font-size: 1rem;
 }
 
 .dummy-orders-table tr:last-child td {

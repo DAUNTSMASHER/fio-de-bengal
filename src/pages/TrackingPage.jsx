@@ -46,9 +46,9 @@ const TrackingPage = () => {
 
   const getCarrierLogo = (carrier) => {
     switch (carrier) {
-      case 'FedEx': return 'https://upload.wikimedia.org/wikipedia/commons/9/9d/FedEx_Express.svg';
-      case 'DHL': return 'https://upload.wikimedia.org/wikipedia/commons/b/b1/DHL_Logo.svg';
-      case 'UPS': return 'https://upload.wikimedia.org/wikipedia/commons/1/1b/UPS_logo.svg';
+      case 'FedEx': return 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/FedEx_Express.svg/512px-FedEx_Express.svg.png';
+      case 'DHL': return 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/DHL_Express_logo.svg/512px-DHL_Express_logo.svg.png';
+      case 'UPS': return 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/UPS_logo.svg/512px-UPS_logo.svg.png';
       default: return null;
     }
   };
