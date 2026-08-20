@@ -123,42 +123,6 @@ const ProductPage = () => {
             <img src={product.image || '/design_assets/fio_main_logo.png'} alt={product.name} className="product-main-img" />
           </div>
 
-          {/* Integrated Model Availability Table - Moved to Left Column for Symmetry */}
-          <div className="integrated-inventory" style={{marginTop: '40px'}}>
-            <h3 style={{marginBottom: '15px'}}>Current Model Availability</h3>
-            <div className="inventory-card" style={{padding: 0, overflow: 'hidden'}}>
-              <div className="inventory-table-container">
-                <table className="inventory-table">
-                  <thead>
-                    <tr>
-                      <th>Base Size</th>
-                      <th>Length</th>
-                      <th>Color</th>
-                      <th style={{textAlign: 'center'}}>Processing Time</th>
-                      <th style={{textAlign: 'center'}}>Delivery Time</th>
-                      <th style={{textAlign: 'center'}}>Total Time</th>
-                      <th style={{textAlign: 'center'}}>Stock</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {inventory.length > 0 ? inventory.map(item => (
-                      <tr key={item.id}>
-                        <td>{item.base_size}</td>
-                        <td>{item.length}</td>
-                        <td>{item.color}</td>
-                        <td style={{textAlign: 'center'}}>3-5 Days</td>
-                        <td style={{textAlign: 'center'}}>3-5 Days</td>
-                        <td style={{textAlign: 'center'}}><strong>6-10 Days</strong></td>
-                        <td style={{textAlign: 'center'}}><span className="stock-badge">{item.quantity}</span></td>
-                      </tr>
-                    )) : (
-                      <tr><td colSpan="7" style={{padding: '20px', textAlign: 'center'}}>No inventory data found.</td></tr>
-                    )}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
         </div>
         
         <div className="product-info-panel">
@@ -214,6 +178,45 @@ const ProductPage = () => {
                 </button>
               </div>
             )}
+          </div>
+        </div>
+      </div>
+
+      {/* Full-width Integrated Model Availability Table */}
+      <div className="container" style={{marginTop: '40px'}}>
+        <div className="integrated-inventory">
+          <h3 style={{marginBottom: '15px', color: 'var(--text-primary)', borderBottom: '2px solid var(--accent-gold)', display: 'inline-block', paddingBottom: '4px'}}>Current Model Availability</h3>
+          <div className="inventory-card" style={{padding: 0, overflow: 'hidden', backgroundColor: 'white', borderRadius: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.05)'}}>
+            <div className="inventory-table-container">
+              <table className="inventory-table">
+                <thead>
+                  <tr>
+                    <th>Base Size</th>
+                    <th>Length</th>
+                    <th>Color</th>
+                    <th style={{textAlign: 'center'}}>Processing Time</th>
+                    <th style={{textAlign: 'center'}}>Delivery Time</th>
+                    <th style={{textAlign: 'center'}}>Total Time</th>
+                    <th style={{textAlign: 'center'}}>Stock</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {inventory.length > 0 ? inventory.map(item => (
+                    <tr key={item.id}>
+                      <td>{item.base_size}</td>
+                      <td>{item.length}</td>
+                      <td>{item.color}</td>
+                      <td style={{textAlign: 'center'}}>3-5 Days</td>
+                      <td style={{textAlign: 'center'}}>3-5 Days</td>
+                      <td style={{textAlign: 'center'}}><strong>6-10 Days</strong></td>
+                      <td style={{textAlign: 'center'}}><span className="stock-badge">{item.quantity}</span></td>
+                    </tr>
+                  )) : (
+                    <tr><td colSpan="7" style={{padding: '20px', textAlign: 'center'}}>No inventory data found.</td></tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>
