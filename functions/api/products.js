@@ -12,8 +12,8 @@ export async function onRequestGet(context) {
 
     // Fallback if D1 is not configured yet
     const fallbackProducts = [
-      { id: 1, name: 'Hollywood', sku: 'FIO-HL-001', price: 150.00, image: '/Products/Hollywood.png', moq: '1 piece', isGuaranteed: true, description: 'Premium Hollywood style system with flawless undetectable lace.' },
-      { id: 2, name: 'BMW', sku: 'FIO-BM-002', price: 180.00, image: '/Products/BMW.png', moq: '1 piece', isGuaranteed: true, description: 'The BMW line offers superior durability and a completely natural scalp appearance.' },
+      { id: 1, name: 'Hollywood', sku: 'FIO-HL-001', price: 150.00, image: '/Products/Hollywood.jpg', moq: '1 piece', isGuaranteed: true, description: 'Premium Hollywood style system with flawless undetectable lace.' },
+      { id: 2, name: 'BMW', sku: 'FIO-BM-002', price: 180.00, image: '/Products/Bmw.jpg', moq: '1 piece', isGuaranteed: true, description: 'The BMW line offers superior durability and a completely natural scalp appearance.' },
       { id: 3, name: 'Mono', sku: 'FIO-MN-003', price: 130.00, image: '/Products/Mono.png', moq: '1 piece', isGuaranteed: true, description: 'Classic Monofilament top providing incredible breathability and multi-directional styling versatility.' },
       { id: 4, name: 'Mono Front Lace', sku: 'FIO-MFL-004', price: 160.00, image: '/Products/Mono Front Lace.png', moq: '1 piece', isGuaranteed: true, description: 'The perfect hybrid: a breathable Mono top combined with an undetectable Front Lace hairline.' },
       { id: 5, name: 'Australia', sku: 'FIO-AU-005', price: 145.00, image: '/Products/Australia.png', moq: '1 piece', isGuaranteed: true, description: 'The Australia base offers a unique blend of comfort, durability, and natural hair movement.' },
