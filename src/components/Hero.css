@@ -1,77 +1,65 @@
 .hero {
-  padding: 120px 0;
-  border-bottom: 1px solid var(--border-muted);
   position: relative;
+  min-height: 85vh;
+  display: flex;
   overflow: hidden;
-  min-height: 80vh;
+  background-color: var(--bg-primary);
+  border-bottom: 1px solid var(--border-muted);
+}
+
+.hero-split-left {
+  width: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 40px;
+  z-index: 1;
 }
 
-.hero-bg-video {
-  position: absolute;
-  top: 0;
-  left: 0;
+.hero-side-logo {
+  max-width: 70%;
+  max-height: 60vh;
+  object-fit: contain;
+  mix-blend-mode: multiply;
+  opacity: 0.9;
+}
+
+.hero-split-right {
+  width: 50%;
+  position: relative;
+  z-index: 0;
+}
+
+.hero-side-video {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  z-index: 0;
-  opacity: 0.15; /* Merges naturally with the background */
-  mix-blend-mode: darken;
-  pointer-events: none;
+  opacity: 0.35; /* Less opacity as requested */
+  mix-blend-mode: darken; /* Merges it nicely into the white background */
 }
 
-.hero-bg-logo-wrapper {
+.hero-center-content {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 45vw; /* Dominant watermark presence */
-  height: 45vw;
-  z-index: 1;
-  pointer-events: none;
-  opacity: 0.08; /* Very subtle so it doesn't clash with video/text */
-  mix-blend-mode: multiply;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.hero-bg-logo {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
-}
-
-.hero-video-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: radial-gradient(circle at center, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0.9) 100%);
   z-index: 2;
-  pointer-events: none;
-}
-
-.hero-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
   text-align: center;
-  position: relative;
-  z-index: 3;
-  max-width: 800px;
-}
-
-.hero-content {
-  max-width: 600px;
+  max-width: 750px;
+  width: 90%;
+  
+  /* Glassmorphism backing so text is perfectly readable straddling the seam */
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  padding: 56px 48px;
+  border-radius: 24px;
+  box-shadow: 0 24px 48px rgba(0,0,0,0.05);
+  border: 1px solid rgba(255,255,255,0.6);
 }
 
 .hero-title {
-  font-size: 4rem;
+  font-size: 3.5rem;
   line-height: 1.1;
   margin-bottom: 24px;
 }
@@ -79,16 +67,23 @@
 .hero-subtitle {
   font-size: 1.25rem;
   color: var(--text-secondary);
-  margin-bottom: 40px;
+  margin-bottom: 32px;
   line-height: 1.6;
 }
 
-@media (max-width: 768px) {
-  .hero-title {
-    font-size: 2.8rem;
+@media (max-width: 992px) {
+  .hero {
+    flex-direction: column;
   }
-  .hero-bg-logo-wrapper {
-    width: 80vw;
-    height: 80vw;
+  .hero-split-left, .hero-split-right {
+    width: 100%;
+    height: 50vh;
+  }
+  .hero-center-content {
+    width: 85%;
+    padding: 32px;
+  }
+  .hero-title {
+    font-size: 2.5rem;
   }
 }
