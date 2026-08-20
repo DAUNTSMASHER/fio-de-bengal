@@ -1,13 +1,16 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { Paperclip } from 'lucide-react';
 import './ChatWindow.css';
 
 const ChatWindow = ({ inquiry, currentUser, onOfferSent, onDealFinalized }) => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
   const [sending, setSending] = useState(false);
+  const [uploadingFile, setUploadingFile] = useState(false);
   const [offerPrice, setOfferPrice] = useState(inquiry.offered_price);
   
   const chatEndRef = useRef(null);
+  const fileInputRef = useRef(null);
 
   const fetchMessages = async () => {
     try {
@@ -21,37 +24,63 @@ const ChatWindow = ({ inquiry, currentUser, onOfferSent, onDealFinalized }) => {
     }
   };
 
-  // Poll for new messages every 3 seconds
   useEffect(() => {
     fetchMessages();
     const interval = setInterval(fetchMessages, 3000);
     return () => clearInterval(interval);
   }, [inquiry.id]);
 
-  // Removed auto-scroll completely so the screen remains static
+  const sendPayload = async (text) => {
+    await fetch('/api/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        inquiry_id: inquiry.id,
+        sender_role: currentUser.role,
+        sender_name: currentUser.name,
+        message: text
+      })
+    });
+    fetchMessages();
+  };
 
   const handleSendMessage = async (e) => {
     e.preventDefault();
     if (!newMessage.trim()) return;
     setSending(true);
-
     try {
-      await fetch('/api/messages', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          inquiry_id: inquiry.id,
-          sender_role: currentUser.role,
-          sender_name: currentUser.name,
-          message: newMessage
-        })
-      });
+      await sendPayload(newMessage);
       setNewMessage('');
-      fetchMessages();
     } catch (err) {
       alert("Error sending message");
     } finally {
       setSending(false);
+    }
+  };
+
+  const handleFileUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    setUploadingFile(true);
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const res = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Upload failed');
+      
+      // Send the special attachment format
+      await sendPayload(`[ATTACHMENT] ${data.url}`);
+    } catch (err) {
+      alert('File Upload Error: ' + err.message);
+    } finally {
+      setUploadingFile(false);
+      if (fileInputRef.current) fileInputRef.current.value = '';
     }
   };
 
@@ -60,14 +89,12 @@ const ChatWindow = ({ inquiry, currentUser, onOfferSent, onDealFinalized }) => {
     if (isNaN(finalPrice)) return alert("Invalid price");
 
     try {
-      // 1. Update Inquiry Status
       await fetch('/api/inquiries', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id: inquiry.id, status: 'Offer Sent', final_price: finalPrice })
       });
       
-      // 2. Send System Message
       await fetch('/api/messages', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -112,6 +139,22 @@ const ChatWindow = ({ inquiry, currentUser, onOfferSent, onDealFinalized }) => {
     }
   };
 
+  const renderMessageContent = (text) => {
+    if (text.startsWith('[ATTACHMENT] ')) {
+      const url = text.replace('[ATTACHMENT] ', '');
+      const lowerUrl = url.toLowerCase();
+      
+      if (lowerUrl.match(/\.(jpeg|jpg|gif|png|webp)(\?.*)?$/i)) {
+        return <img src={url} alt="attachment" style={{maxWidth: '100%', maxHeight: '200px', borderRadius: '8px'}} />;
+      }
+      if (lowerUrl.match(/\.(mp4|webm|ogg|mov)(\?.*)?$/i)) {
+        return <video src={url} controls style={{maxWidth: '100%', maxHeight: '200px', borderRadius: '8px'}} />;
+      }
+      return <a href={url} target="_blank" rel="noreferrer" style={{textDecoration: 'underline', fontWeight: 'bold'}}>📎 Download Attached File</a>;
+    }
+    return text;
+  };
+
   return (
     <div className="chat-window-container">
       <div className="chat-header">
@@ -137,7 +180,7 @@ const ChatWindow = ({ inquiry, currentUser, onOfferSent, onDealFinalized }) => {
           return (
             <div key={msg.id} className={`message ${isSystem ? 'system-msg' : isMe ? 'my-msg' : 'their-msg'}`}>
               {!isSystem && <div className="msg-sender">{msg.sender_name}</div>}
-              <div className="msg-bubble">{msg.message}</div>
+              <div className="msg-bubble">{renderMessageContent(msg.message)}</div>
             </div>
           );
         })}
@@ -167,13 +210,31 @@ const ChatWindow = ({ inquiry, currentUser, onOfferSent, onDealFinalized }) => {
 
           <form className="chat-input-bar" onSubmit={handleSendMessage}>
             <input 
+              type="file" 
+              ref={fileInputRef} 
+              style={{display: 'none'}} 
+              onChange={handleFileUpload} 
+              accept="image/*,video/*,.pdf,.doc,.docx" 
+            />
+            <button 
+              type="button" 
+              className="btn btn-outline" 
+              style={{padding: '10px'}} 
+              onClick={() => fileInputRef.current?.click()}
+              disabled={uploadingFile}
+              title="Attach File"
+            >
+              {uploadingFile ? "..." : <Paperclip size={18} />}
+            </button>
+            
+            <input 
               type="text" 
               placeholder="Type your message..." 
               value={newMessage} 
               onChange={e => setNewMessage(e.target.value)} 
-              disabled={sending}
+              disabled={sending || uploadingFile}
             />
-            <button type="submit" className="btn btn-outline" disabled={sending || !newMessage.trim()}>Send</button>
+            <button type="submit" className="btn btn-outline" disabled={sending || uploadingFile || !newMessage.trim()}>Send</button>
           </form>
         </div>
       )}

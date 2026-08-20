@@ -13,7 +13,7 @@ export async function onRequestPost(context) {
     }
 
     // Cloudflare Pages Environment Variables for Cloudinary
-    const CLOUDINARY_URL = `https://api.cloudinary.com/v1_1/${env.CLOUDINARY_CLOUD_NAME}/image/upload`;
+    const CLOUDINARY_URL = `https://api.cloudinary.com/v1_1/${env.CLOUDINARY_CLOUD_NAME}/auto/upload`;
     
     // Prepare data for Cloudinary
     const cloudinaryData = new FormData();
@@ -33,8 +33,8 @@ export async function onRequestPost(context) {
     }
 
     let imageUrl = result.secure_url;
-    // Inject Cloudinary auto-optimization parameters to ensure < 300kb size
-    if (imageUrl.includes('/upload/')) {
+    // Inject Cloudinary auto-optimization parameters only if it's an image
+    if (result.resource_type === 'image' && imageUrl.includes('/upload/')) {
       imageUrl = imageUrl.replace('/upload/', '/upload/q_auto,f_auto,w_800/');
     }
 
