@@ -1,0 +1,30 @@
+.whatsapp-btn {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 56px;
+  height: 56px;
+  background-color: #25D366;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  z-index: 1000;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  overflow: hidden;
+}
+
+.whatsapp-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 16px rgba(37, 211, 102, 0.5);
+}
+
+.whatsapp-icon {
+  width: 60px;
+  height: 60px;
+  transform: scale(2.2); /* Scale aggressively to fill the green button */
+  mix-blend-mode: normal; /* Override darken so it shows correctly on green if needed, or leave it. Actually darken is fine if background is white, but wait, white on green with darken will make it solid green! Let's use mix-blend-mode: multiply so white becomes transparent */
+  mix-blend-mode: multiply;
+}

@@ -1,0 +1,77 @@
+.production-process {
+  padding: 120px 0;
+  background-color: var(--surface-card);
+  border-bottom: 1px solid var(--border-muted);
+}
+
+.process-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  align-items: center;
+}
+
+.process-visual {
+  width: 100%;
+}
+
+.process-img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: contain;
+  mix-blend-mode: multiply; /* THIS makes the image background invisible! */
+}
+
+.process-content-overlay {
+  max-width: 500px;
+  background-color: rgba(255, 255, 255, 0.95);
+  padding: 48px;
+  border-radius: 12px;
+  box-shadow: 0 16px 48px rgba(0,0,0,0.08);
+  backdrop-filter: blur(8px);
+}
+
+.process-steps {
+  margin-top: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.step {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.step-number {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-primary);
+  opacity: 0.2;
+  line-height: 1;
+  padding-top: 2px;
+}
+
+.step h4 {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 4px 0;
+}
+
+.step p {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .process-container {
+    justify-content: center;
+  }
+  .process-content-overlay {
+    padding: 32px 24px;
+  }
+}

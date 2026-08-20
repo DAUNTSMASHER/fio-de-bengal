@@ -1,0 +1,90 @@
+.hero {
+  padding: 80px 0;
+  border-bottom: 1px solid var(--border-muted);
+  position: relative;
+  overflow: hidden; /* Contains the giant background logo */
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -20%;
+  left: -20%;
+  width: 80vw; /* Smaller so it acts as an accent */
+  height: 80vw;
+  background-image: url('/design_assets/fio_generated_tiger_logo.png');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  opacity: 0.04; 
+  transform: rotate(0deg);
+  pointer-events: none;
+  animation: slowPulseRotate 40s linear infinite;
+  z-index: 0;
+  mix-blend-mode: multiply;
+}
+
+@keyframes slowPulseRotate {
+  0% { transform: rotate(-10deg) scale(1); }
+  50% { transform: rotate(10deg) scale(1.05); }
+  100% { transform: rotate(-10deg) scale(1); }
+}
+
+.hero-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: center;
+  position: relative;
+  z-index: 1; /* Place above the animated background */
+}
+
+.hero-title {
+  font-size: 3.5rem;
+  line-height: 1.1;
+  margin-bottom: 24px;
+}
+
+.hero-subtitle {
+  font-size: 1.25rem;
+  color: var(--text-secondary);
+  margin-bottom: 40px;
+  line-height: 1.6;
+}
+
+.hero-visual {
+  background-color: var(--surface-card);
+  border: 1px solid var(--border-muted);
+  border-radius: 8px;
+  aspect-ratio: 4/5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  color: var(--badge-secure);
+  font-weight: 600;
+}
+
+.guarantee-icon {
+  width: 120px; /* Much bigger */
+  height: 120px;
+  transform: scale(1.8);
+}
+
+@media (max-width: 768px) {
+  .hero-container {
+    grid-template-columns: 1fr;
+  }
+  
+  .hero-title {
+    font-size: 2.5rem;
+  }
+}

@@ -1,0 +1,67 @@
+.footer {
+  background-color: var(--surface-card);
+  border-top: 1px solid var(--border-muted);
+  padding-top: 64px;
+}
+
+.footer-container {
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+  margin-bottom: 48px;
+}
+
+@media (min-width: 768px) {
+  .footer-container {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+}
+
+.footer-brand {
+  max-width: 300px;
+  overflow: hidden; /* Clips the scaled up logo to prevent bleeding */
+}
+
+.footer-logo {
+  height: 140px; /* Use natural height instead of transform */
+  object-fit: contain;
+  mix-blend-mode: multiply; /* Better than darken */
+}
+
+.footer-description {
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.footer-links {
+  display: flex;
+  gap: 48px;
+}
+
+.link-group h4 {
+  font-size: 1rem;
+  margin-bottom: 16px;
+  color: var(--text-primary);
+}
+
+.link-group a {
+  display: block;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+  font-size: 0.875rem;
+  transition: color 0.2s ease;
+}
+
+.link-group a:hover {
+  color: var(--text-primary);
+}
+
+.footer-bottom {
+  border-top: 1px solid var(--border-muted);
+  padding: 24px 0;
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+}
