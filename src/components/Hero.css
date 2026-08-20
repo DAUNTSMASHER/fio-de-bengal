@@ -2,64 +2,87 @@
   position: relative;
   min-height: 85vh;
   display: flex;
+  align-items: center;
+  justify-content: center;
   overflow: hidden;
   background-color: var(--bg-primary);
   border-bottom: 1px solid var(--border-muted);
 }
 
-.hero-split-left {
+.hero-background-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.hero-bg-left {
   width: 50%;
+  height: 100%;
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 40px;
-  z-index: 1;
 }
 
-.hero-side-logo {
-  max-width: 70%;
-  max-height: 60vh;
+.hero-bg-logo {
+  width: 120%; /* Bleeds off edge like a true background */
+  max-height: 120%;
   object-fit: contain;
+  opacity: 0.08; /* Subtle watermark */
   mix-blend-mode: multiply;
-  opacity: 0.9;
+  animation: slowPulseRotate 40s linear infinite; /* Restored original animation! */
 }
 
-.hero-split-right {
+@keyframes slowPulseRotate {
+  0% { transform: rotate(-10deg) scale(1); }
+  50% { transform: rotate(10deg) scale(1.05); }
+  100% { transform: rotate(-10deg) scale(1); }
+}
+
+.hero-bg-right {
   width: 50%;
+  height: 100%;
   position: relative;
-  z-index: 0;
 }
 
-.hero-side-video {
+.hero-bg-video {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  opacity: 0.35; /* Less opacity as requested */
-  mix-blend-mode: darken; /* Merges it nicely into the white background */
+  opacity: 0.3; /* Less opacity as requested */
+  mix-blend-mode: darken;
 }
 
-.hero-center-content {
+/* Optional overlay to blend the two halves softly behind the text */
+.hero-background-layer::after {
+  content: '';
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at center, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0.2) 100%);
+  pointer-events: none;
+}
+
+.hero-container {
+  position: relative;
   z-index: 2;
   text-align: center;
-  max-width: 750px;
-  width: 90%;
-  
-  /* Glassmorphism backing so text is perfectly readable straddling the seam */
-  background: rgba(255, 255, 255, 0.75);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  padding: 56px 48px;
-  border-radius: 24px;
-  box-shadow: 0 24px 48px rgba(0,0,0,0.05);
-  border: 1px solid rgba(255,255,255,0.6);
+  max-width: 800px;
+}
+
+.hero-content {
+  padding: 0 24px;
 }
 
 .hero-title {
-  font-size: 3.5rem;
+  font-size: 4rem;
   line-height: 1.1;
   margin-bottom: 24px;
 }
@@ -67,23 +90,19 @@
 .hero-subtitle {
   font-size: 1.25rem;
   color: var(--text-secondary);
-  margin-bottom: 32px;
+  margin-bottom: 40px;
   line-height: 1.6;
 }
 
-@media (max-width: 992px) {
-  .hero {
+@media (max-width: 768px) {
+  .hero-background-layer {
     flex-direction: column;
   }
-  .hero-split-left, .hero-split-right {
+  .hero-bg-left, .hero-bg-right {
     width: 100%;
-    height: 50vh;
-  }
-  .hero-center-content {
-    width: 85%;
-    padding: 32px;
+    height: 50%;
   }
   .hero-title {
-    font-size: 2.5rem;
+    font-size: 2.8rem;
   }
 }
