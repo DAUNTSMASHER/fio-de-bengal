@@ -9,65 +9,28 @@
   border-bottom: 1px solid var(--border-muted);
 }
 
-.hero-background-layer {
+.hero::before {
+  content: '';
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  z-index: 0;
+  top: 50%;
+  left: 50%;
+  width: 80vw;
+  height: 80vw;
+  background-image: url('/design_assets/fio_generated_tiger_logo.png');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  opacity: 0.04; 
   pointer-events: none;
-}
-
-.hero-bg-left {
-  width: 50%;
-  height: 100%;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.hero-bg-logo {
-  width: 120%; /* Bleeds off edge like a true background */
-  max-height: 120%;
-  object-fit: contain;
-  opacity: 0.08; /* Subtle watermark */
+  animation: slowPulseRotate 40s linear infinite;
+  z-index: 0;
   mix-blend-mode: multiply;
-  animation: slowPulseRotate 40s linear infinite; /* Restored original animation! */
 }
 
 @keyframes slowPulseRotate {
-  0% { transform: rotate(-10deg) scale(1); }
-  50% { transform: rotate(10deg) scale(1.05); }
-  100% { transform: rotate(-10deg) scale(1); }
-}
-
-.hero-bg-right {
-  width: 50%;
-  height: 100%;
-  position: relative;
-}
-
-.hero-bg-video {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  opacity: 0.3; /* Less opacity as requested */
-  mix-blend-mode: darken;
-}
-
-/* Optional overlay to blend the two halves softly behind the text */
-.hero-background-layer::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: radial-gradient(circle at center, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0.2) 100%);
-  pointer-events: none;
+  0% { transform: translate(-50%, -50%) rotate(-5deg) scale(1); }
+  50% { transform: translate(-50%, -50%) rotate(5deg) scale(1.05); }
+  100% { transform: translate(-50%, -50%) rotate(-5deg) scale(1); }
 }
 
 .hero-container {
@@ -95,13 +58,6 @@
 }
 
 @media (max-width: 768px) {
-  .hero-background-layer {
-    flex-direction: column;
-  }
-  .hero-bg-left, .hero-bg-right {
-    width: 100%;
-    height: 50%;
-  }
   .hero-title {
     font-size: 2.8rem;
   }
