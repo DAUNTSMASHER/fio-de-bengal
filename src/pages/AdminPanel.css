@@ -213,6 +213,28 @@
   font-family: 'Georgia', serif;
 }
 
-.sidebar-brand-box { background: white; border-radius: 8px; padding: 12px; display: flex; align-items: center; gap: 12px; margin-bottom: 30px; border: 1px solid #333; }
-.sidebar-tiger-icon { width: 40px; height: 40px; object-fit: contain; }
-.sidebar-brand-text { display: flex; flex-direction: column; font-weight: 800; font-size: 1.1rem; line-height: 1.1; color: #000; letter-spacing: 1px; }
+.sidebar-brand-box { 
+  background: white; 
+  border-radius: 8px; 
+  padding: 16px 20px; 
+  display: flex; 
+  align-items: center; 
+  gap: 16px; 
+  margin: 0 24px 40px 24px; 
+  border: 1px solid #333; 
+}
+.sidebar-tiger-icon { 
+  width: 60px; 
+  height: 60px; 
+  object-fit: contain; 
+}
+.sidebar-brand-text { 
+  display: flex; 
+  flex-direction: column; 
+  font-family: 'Georgia', serif;
+  font-weight: 800; 
+  font-size: 1.2rem; 
+  line-height: 1.2; 
+  color: #000; 
+  letter-spacing: 2px; 
+}

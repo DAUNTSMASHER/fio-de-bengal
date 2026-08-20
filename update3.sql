@@ -1,22 +1,4 @@
--- Run this file in your Cloudflare dashboard to set up the D1 Database
--- Go to Workers & Pages > D1 > Create Database
--- Then go to the Database > Console and paste this SQL
-
-DROP TABLE IF EXISTS Products;
 DROP TABLE IF EXISTS Inventory;
-
-CREATE TABLE Products (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT NOT NULL,
-    slug TEXT,
-    sku TEXT,
-    price REAL NOT NULL,
-    image TEXT,
-    moq TEXT,
-    isGuaranteed BOOLEAN DEFAULT 1,
-    description TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
 
 CREATE TABLE Inventory (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -70,30 +52,4 @@ INSERT INTO Inventory (product_id, base_size, length, color, quantity) VALUES
 (6, '6x9', '10-12 inches', '#1', '200-230'), (6, '6x9', '10-12 inches', '#2', '80-100'), (6, '6x9', '10-12 inches', '#1B', '200-230'),
 (6, '8x10', '10-12 inches', '#1', '200-230'), (6, '8x10', '10-12 inches', '#2', '80-100'), (6, '8x10', '10-12 inches', '#1B', '200-230');
 
-DROP TABLE IF EXISTS Inquiries;
-DROP TABLE IF EXISTS Messages;
-
-CREATE TABLE Inquiries (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    buyer_email TEXT NOT NULL,
-    product_id INTEGER,
-    product_name TEXT NOT NULL,
-    base TEXT,
-    color TEXT,
-    density TEXT,
-    quantity INTEGER,
-    offered_price REAL,
-    final_price REAL,
-    status TEXT DEFAULT 'Negotiating',
-    shipping_address TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE Messages (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    inquiry_id INTEGER NOT NULL,
-    sender_role TEXT NOT NULL,
-    sender_name TEXT,
-    message TEXT NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+ALTER TABLE Inquiries ADD COLUMN length TEXT;

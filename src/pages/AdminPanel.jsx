@@ -242,25 +242,66 @@ const AdminPanel = () => {
                   {products.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
                 </select>
               </div>
-              <div style={{ marginBottom: '20px' }}>
-                <div className="inventory-tabs">
-                  <button className={`btn ${activeInventoryTab === 'base' ? 'btn-primary' : 'btn-outline'}`} onClick={() => setActiveInventoryTab('base')}>Base Sizes</button>
-                  <button className={`btn ${activeInventoryTab === 'color' ? 'btn-primary' : 'btn-outline'}`} style={{ margin: '0 10px' }} onClick={() => setActiveInventoryTab('color')}>Colors</button>
-                  <button className={`btn ${activeInventoryTab === 'density' ? 'btn-primary' : 'btn-outline'}`} onClick={() => setActiveInventoryTab('density')}>Densities</button>
-                </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+                <h3 style={{margin: 0}}>SKU Combinations</h3>
+                <button className="btn btn-outline" style={{padding: '8px 16px', fontSize: '14px'}}>+ Add Variation</button>
               </div>
               <table className="admin-table">
-                <thead><tr><th>{activeInventoryTab.toUpperCase()} Label</th><th>Quantity</th><th>Action</th></tr></thead>
+                <thead>
+                  <tr>
+                    <th>Base Size</th>
+                    <th>Length</th>
+                    <th>Color</th>
+                    <th>Quantity</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
                 <tbody>
-                  {inventory.filter(i => i.category === activeInventoryTab).map(item => (
+                  {inventory.map(item => (
                     <tr key={item.id}>
-                      <td><strong>{item.label}</strong></td>
-                      <td><span className="status-badge shipped">{item.quantity}</span></td>
+                      <td>{item.base_size}</td>
+                      <td>{item.length}</td>
+                      <td>{item.color}</td>
                       <td>
-                        <button className="btn btn-outline" style={{ padding: '4px 12px', fontSize: '0.85rem' }} onClick={() => handleInventoryUpdate(item.id, item.quantity)}>Edit Stock</button>
+                        {editingInventory === item.id ? (
+                          <input 
+                            type="text" 
+                            defaultValue={item.quantity}
+                            id={`inv-input-${item.id}`}
+                            style={{ width: '80px', padding: '4px' }}
+                          />
+                        ) : (
+                          <span className="status-badge shipped">{item.quantity}</span>
+                        )}
+                      </td>
+                      <td>
+                        {editingInventory === item.id ? (
+                          <button 
+                            className="btn btn-primary" 
+                            style={{padding: '4px 12px', fontSize: '12px'}}
+                            onClick={() => {
+                              const newVal = document.getElementById(`inv-input-${item.id}`).value;
+                              handleInventoryUpdate(item.id, newVal);
+                              setEditingInventory(null);
+                            }}
+                          >
+                            Save
+                          </button>
+                        ) : (
+                          <button 
+                            className="btn btn-outline"
+                            style={{padding: '4px 12px', fontSize: '12px'}}
+                            onClick={() => setEditingInventory(item.id)}
+                          >
+                            Edit
+                          </button>
+                        )}
                       </td>
                     </tr>
                   ))}
+                  {inventory.length === 0 && (
+                    <tr><td colSpan="5" style={{textAlign: 'center'}}>No inventory variants found for this product.</td></tr>
+                  )}
                 </tbody>
               </table>
             </div>

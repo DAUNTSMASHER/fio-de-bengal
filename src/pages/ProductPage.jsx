@@ -17,7 +17,7 @@ const ProductPage = () => {
   // Quotation States
   const [selectedBase, setSelectedBase] = useState('');
   const [selectedColor, setSelectedColor] = useState('');
-  const [selectedDensity, setSelectedDensity] = useState('');
+  const [selectedLength, setSelectedLength] = useState('');
   const [quantity, setQuantity] = useState(1);
   const [offeredPrice, setOfferedPrice] = useState('');
   
@@ -53,12 +53,13 @@ const ProductPage = () => {
       .catch(err => console.error("Error fetching inventory", err));
   }, [id]);
 
-  const baseInventory = inventory.filter(i => i.category === 'base');
-  const colorInventory = inventory.filter(i => i.category === 'color');
-  const densityInventory = inventory.filter(i => i.category === 'density');
+  // Extract unique options for dropdowns
+  const uniqueBases = [...new Set(inventory.map(i => i.base_size))];
+  const uniqueColors = [...new Set(inventory.map(i => i.color))];
+  const uniqueLengths = [...new Set(inventory.map(i => i.length))];
 
   const handleOpenModal = () => {
-    if (!selectedBase || !selectedColor || !selectedDensity || !quantity || !offeredPrice) {
+    if (!selectedBase || !selectedColor || !selectedLength || !quantity || !offeredPrice) {
       return alert("Please fill out all quotation fields before proceeding.");
     }
     setShowModal(true);
@@ -79,7 +80,7 @@ const ProductPage = () => {
           product_name: product.name,
           base: selectedBase,
           color: selectedColor,
-          density: selectedDensity,
+          length: selectedLength, // Assuming the backend is updated to accept length instead of density if needed, or we just pass it along
           quantity: parseInt(quantity),
           offered_price: parseFloat(offeredPrice)
         })
@@ -143,21 +144,21 @@ const ProductPage = () => {
                   <label>Base Size</label>
                   <select value={selectedBase} onChange={e => setSelectedBase(e.target.value)} className="form-control">
                     <option value="">Select Base</option>
-                    {baseInventory.map(i => <option key={i.id} value={i.label}>{i.label}</option>)}
+                    {uniqueBases.map((b, idx) => <option key={idx} value={b}>{b}</option>)}
+                  </select>
+                </div>
+                <div className="form-group">
+                  <label>Length</label>
+                  <select value={selectedLength} onChange={e => setSelectedLength(e.target.value)} className="form-control">
+                    <option value="">Select Length</option>
+                    {uniqueLengths.map((l, idx) => <option key={idx} value={l}>{l}</option>)}
                   </select>
                 </div>
                 <div className="form-group">
                   <label>Color</label>
                   <select value={selectedColor} onChange={e => setSelectedColor(e.target.value)} className="form-control">
                     <option value="">Select Color</option>
-                    {colorInventory.map(i => <option key={i.id} value={i.label}>{i.label}</option>)}
-                  </select>
-                </div>
-                <div className="form-group">
-                  <label>Density</label>
-                  <select value={selectedDensity} onChange={e => setSelectedDensity(e.target.value)} className="form-control">
-                    <option value="">Select Density</option>
-                    {densityInventory.map(i => <option key={i.id} value={i.label}>{i.label}</option>)}
+                    {uniqueColors.map((c, idx) => <option key={idx} value={c}>{c}</option>)}
                   </select>
                 </div>
                 <div className="form-row" style={{ display: 'flex', gap: '15px' }}>
@@ -176,46 +177,36 @@ const ProductPage = () => {
               </div>
             )}
           </div>
-        </div>
-      </div>
-      
-      {/* Model-Specific Inventory Section */}
-      <div className="container inventory-section">
-        <h2 className="inventory-section-title">Current Model Availability</h2>
-        <div className="inventory-tables-grid">
-          <div className="inventory-card">
-            <h3>Base Sizes</h3>
-            <table className="inventory-table">
-              <thead><tr><th>Base</th><th>Stock (approx.)</th></tr></thead>
-              <tbody>
-                {baseInventory.map(item => (
-                  <tr key={item.id}><td>{item.label}</td><td><span className="stock-badge">{item.quantity}</span></td></tr>
-                ))}
-              </tbody>
-            </table>
+          
+          {/* Integrated Model Availability Table */}
+          <div className="integrated-inventory" style={{marginTop: '40px'}}>
+            <h3 style={{marginBottom: '15px'}}>Current Model Availability</h3>
+            <div className="inventory-card" style={{padding: 0, overflow: 'hidden'}}>
+              <table className="inventory-table" style={{width: '100%', borderCollapse: 'collapse'}}>
+                <thead style={{background: '#f8f8f8', textAlign: 'left'}}>
+                  <tr>
+                    <th style={{padding: '12px 16px', borderBottom: '1px solid #eee'}}>Base Size</th>
+                    <th style={{padding: '12px 16px', borderBottom: '1px solid #eee'}}>Length</th>
+                    <th style={{padding: '12px 16px', borderBottom: '1px solid #eee'}}>Color</th>
+                    <th style={{padding: '12px 16px', borderBottom: '1px solid #eee'}}>Stock (approx.)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {inventory.length > 0 ? inventory.map(item => (
+                    <tr key={item.id} style={{borderBottom: '1px solid #eee'}}>
+                      <td style={{padding: '12px 16px'}}>{item.base_size}</td>
+                      <td style={{padding: '12px 16px'}}>{item.length}</td>
+                      <td style={{padding: '12px 16px'}}>{item.color}</td>
+                      <td style={{padding: '12px 16px'}}><span className="stock-badge" style={{background: '#e6fffa', color: '#008060', padding: '4px 10px', borderRadius: '12px', fontSize: '0.85rem', fontWeight: 'bold'}}>{item.quantity}</span></td>
+                    </tr>
+                  )) : (
+                    <tr><td colSpan="4" style={{padding: '20px', textAlign: 'center'}}>No inventory data found.</td></tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
           </div>
-          <div className="inventory-card">
-            <h3>Colors</h3>
-            <table className="inventory-table">
-              <thead><tr><th>Color</th><th>Stock (approx.)</th></tr></thead>
-              <tbody>
-                {colorInventory.map(item => (
-                  <tr key={item.id}><td>{item.label}</td><td><span className="stock-badge">{item.quantity}</span></td></tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          <div className="inventory-card">
-            <h3>Density</h3>
-            <table className="inventory-table">
-              <thead><tr><th>Density</th><th>Stock (approx.)</th></tr></thead>
-              <tbody>
-                {densityInventory.map(item => (
-                  <tr key={item.id}><td>{item.label}</td><td><span className="stock-badge">{item.quantity}</span></td></tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          
         </div>
       </div>
 
@@ -224,7 +215,7 @@ const ProductPage = () => {
         <div className="modal-overlay">
           <div className="modal-content" style={{ maxWidth: '500px' }}>
             <h2>Send Message to Admin</h2>
-            <p>You are offering <strong>${offeredPrice}</strong> for <strong>{quantity}x</strong> of {product.name} ({selectedBase}, {selectedColor}, {selectedDensity}).</p>
+            <p>You are offering <strong>${offeredPrice}</strong> for <strong>{quantity}x</strong> of {product.name} ({selectedBase}, {selectedLength}, {selectedColor}).</p>
             <div className="form-group" style={{marginTop: '20px'}}>
               <label>Message (Optional)</label>
               <textarea 
