@@ -9,6 +9,15 @@ const TrackingPage = () => {
   const [error, setError] = useState('');
   const [hasSearched, setHasSearched] = useState(false);
 
+  const dummyOrders = [
+    { id: 'FIO-89234', destination: 'United States', status: 'In Transit', time: '2 mins ago', color: '#f59e0b' },
+    { id: 'FIO-44192', destination: 'United Kingdom', status: 'Out for Delivery', time: '14 mins ago', color: '#3b82f6' },
+    { id: 'FIO-99210', destination: 'Australia', status: 'Delivered', time: '1 hour ago', color: '#10b981' },
+    { id: 'FIO-11029', destination: 'Canada', status: 'Customs Clearance', time: '3 hours ago', color: '#8b5cf6' },
+    { id: 'FIO-77341', destination: 'Germany', status: 'Dispatched', time: '5 hours ago', color: '#6366f1' },
+    { id: 'FIO-22948', destination: 'France', status: 'Delivered', time: '1 day ago', color: '#10b981' }
+  ];
+
   const handleSearch = async (e) => {
     e.preventDefault();
     if (!orderNo.trim()) return;
@@ -114,6 +123,30 @@ const TrackingPage = () => {
               ) : (
                 <p>No tracking updates available yet.</p>
               )}
+            </div>
+          </div>
+        )}
+
+        {!trackingData && (
+          <div className="live-dummy-orders">
+            <h3 className="live-orders-title">
+              <div className="pulsing-dot"></div> Live Global Shipments
+            </h3>
+            <div className="dummy-orders-grid">
+              {dummyOrders.map((order, idx) => (
+                <div className="dummy-order-card" key={idx}>
+                  <div className="dummy-order-header">
+                    <span className="dummy-id">{order.id}</span>
+                    <span className="dummy-time">{order.time}</span>
+                  </div>
+                  <div className="dummy-order-dest">
+                    <MapPin size={14} /> To: {order.destination}
+                  </div>
+                  <div className="dummy-order-status" style={{color: order.color}}>
+                    {order.status}
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         )}
