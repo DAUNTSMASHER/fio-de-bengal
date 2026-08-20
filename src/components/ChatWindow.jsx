@@ -28,9 +28,7 @@ const ChatWindow = ({ inquiry, currentUser, onOfferSent, onDealFinalized }) => {
     return () => clearInterval(interval);
   }, [inquiry.id]);
 
-  useEffect(() => {
-    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages.length]);
+  // Removed auto-scroll completely so the screen remains static
 
   const handleSendMessage = async (e) => {
     e.preventDefault();
