@@ -32,7 +32,13 @@ export async function onRequestPost(context) {
       throw new Error(result.error?.message || "Cloudinary upload failed");
     }
 
-    return new Response(JSON.stringify({ url: result.secure_url }), {
+    let imageUrl = result.secure_url;
+    // Inject Cloudinary auto-optimization parameters to ensure < 300kb size
+    if (imageUrl.includes('/upload/')) {
+      imageUrl = imageUrl.replace('/upload/', '/upload/q_auto,f_auto,w_800/');
+    }
+
+    return new Response(JSON.stringify({ url: imageUrl }), {
       headers: { "Content-Type": "application/json" }
     });
 
