@@ -41,9 +41,10 @@
   align-self: flex-end;
 }
 .my-msg .msg-bubble {
-  background: var(--accent-gold);
-  color: white;
+  background: #f0f0f0;
+  color: #000000;
   border-radius: 12px 12px 0 12px;
+  border: 1px solid #ddd;
 }
 
 .their-msg {
