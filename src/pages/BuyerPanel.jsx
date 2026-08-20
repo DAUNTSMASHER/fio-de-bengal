@@ -1,14 +1,34 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { User, Package, LogOut } from 'lucide-react';
+import { User, Package, MessageCircle, LogOut } from 'lucide-react';
+import ChatWindow from '../components/ChatWindow';
 import './BuyerPanel.css';
 
 const BuyerPanel = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  
+  const [activeTab, setActiveTab] = useState('negotiations');
+  const [inquiries, setInquiries] = useState([]);
+  const [activeInquiry, setActiveInquiry] = useState(null);
 
-  // Protect route
+  useEffect(() => {
+    if (user && user.role === 'buyer') {
+      fetchInquiries();
+    }
+  }, [user]);
+
+  const fetchInquiries = async () => {
+    try {
+      const res = await fetch(`/api/inquiries?email=${encodeURIComponent(user.email)}`);
+      const data = await res.json();
+      setInquiries(data);
+    } catch (err) {
+      console.error("Error fetching inquiries", err);
+    }
+  };
+
   if (!user || user.role !== 'buyer') {
     return <div className="unauthorized">Access Denied. Customers only.</div>;
   }
@@ -30,71 +50,102 @@ const BuyerPanel = () => {
             <p>{user.email}</p>
           </div>
           <nav className="dashboard-nav">
-            <button className="nav-btn active"><Package size={18} /> My Orders</button>
-            <button className="nav-btn"><User size={18} /> Account Details</button>
+            <button className={`nav-btn ${activeTab === 'negotiations' ? 'active' : ''}`} onClick={() => { setActiveTab('negotiations'); setActiveInquiry(null); }}>
+              <MessageCircle size={18} /> Negotiations
+            </button>
+            <button className={`nav-btn ${activeTab === 'orders' ? 'active' : ''}`} onClick={() => { setActiveTab('orders'); setActiveInquiry(null); }}>
+              <Package size={18} /> My Orders
+            </button>
             <button className="nav-btn text-danger" onClick={handleLogout}><LogOut size={18} /> Logout</button>
           </nav>
         </aside>
         
         <main className="dashboard-content">
-          <h1>Order History</h1>
-          <p className="subtitle">View and track your recent purchases.</p>
-          
-          <div className="orders-list">
-            <div className="order-card">
-              <div className="order-header">
+          {activeTab === 'negotiations' && (
+            <>
+              {activeInquiry ? (
                 <div>
-                  <span className="order-id">#ORD-9823</span>
-                  <span className="order-date">Placed on Oct 10, 2024</span>
+                  <button className="btn btn-outline" style={{marginBottom: '16px'}} onClick={() => setActiveInquiry(null)}>
+                    &larr; Back to List
+                  </button>
+                  <ChatWindow 
+                    inquiry={activeInquiry} 
+                    currentUser={user} 
+                    onDealFinalized={() => { fetchInquiries(); setActiveInquiry(null); }}
+                  />
                 </div>
-                <span className="status-badge shipped">Shipped</span>
-              </div>
-              <div className="order-items">
-                <div className="order-item">
-                  <div className="item-img-placeholder"></div>
-                  <div className="item-info">
-                    <h4>Raw Bengal Hair Bundle - 18"</h4>
-                    <p>Qty: 2</p>
-                  </div>
-                  <div className="item-price">$240.00</div>
-                </div>
-              </div>
-              <div className="order-footer">
-                <button className="btn btn-outline">Track Package</button>
-                <div className="order-total">
-                  <span>Total:</span>
-                  <strong>$240.00</strong>
-                </div>
-              </div>
-            </div>
+              ) : (
+                <>
+                  <h1>Active Negotiations</h1>
+                  <p className="subtitle">Track and chat about your custom wholesale quotations.</p>
+                  
+                  {inquiries.length === 0 ? (
+                    <div style={{padding: '40px', textAlign: 'center', background: '#fff', borderRadius: '12px'}}>
+                      <p>You have no active negotiations.</p>
+                      <button className="btn btn-primary" onClick={() => navigate('/products')}>Browse Products</button>
+                    </div>
+                  ) : (
+                    <div className="orders-list">
+                      {inquiries.map(inq => (
+                        <div key={inq.id} className="order-card" style={{ cursor: 'pointer' }} onClick={() => setActiveInquiry(inq)}>
+                          <div className="order-header">
+                            <div>
+                              <span className="order-id">Quotation for {inq.product_name}</span>
+                              <span className="order-date">Created on {new Date(inq.created_at).toLocaleDateString()}</span>
+                            </div>
+                            <span className={`status-badge ${inq.status === 'Completed' ? 'delivered' : 'pending'}`}>
+                              {inq.status}
+                            </span>
+                          </div>
+                          <div className="order-items">
+                            <div className="order-item" style={{border: 'none', padding: '10px 0'}}>
+                              <div className="item-info">
+                                <p><strong>Specs:</strong> {inq.base}, {inq.color}, {inq.density}</p>
+                                <p><strong>Quantity:</strong> {inq.quantity} pieces</p>
+                              </div>
+                              <div className="item-price">Offer: ${Number(inq.offered_price).toFixed(2)}</div>
+                            </div>
+                          </div>
+                          <div className="order-footer">
+                            <button className="btn btn-primary w-100">Open Chat</button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </>
+              )}
+            </>
+          )}
 
-            <div className="order-card">
-              <div className="order-header">
-                <div>
-                  <span className="order-id">#ORD-8104</span>
-                  <span className="order-date">Placed on Sep 02, 2024</span>
-                </div>
-                <span className="status-badge delivered">Delivered</span>
-              </div>
-              <div className="order-items">
-                <div className="order-item">
-                  <div className="item-img-placeholder"></div>
-                  <div className="item-info">
-                    <h4>Deep Wave Closure</h4>
-                    <p>Qty: 1</p>
+          {activeTab === 'orders' && (
+            <>
+              <h1>Order History</h1>
+              <p className="subtitle">View your finalized wholesale orders.</p>
+              <div className="orders-list">
+                {inquiries.filter(i => i.status === 'Completed').map(inq => (
+                  <div key={inq.id} className="order-card">
+                    <div className="order-header">
+                      <div>
+                        <span className="order-id">Deal Finalized</span>
+                        <span className="order-date">{new Date(inq.created_at).toLocaleDateString()}</span>
+                      </div>
+                      <span className="status-badge delivered">Completed</span>
+                    </div>
+                    <div className="order-items">
+                      <div className="order-item">
+                        <div className="item-info">
+                          <h4>{inq.product_name}</h4>
+                          <p>Qty: {inq.quantity} | Specs: {inq.base}, {inq.color}, {inq.density}</p>
+                        </div>
+                        <div className="item-price">${(inq.final_price * inq.quantity).toFixed(2)}</div>
+                      </div>
+                    </div>
                   </div>
-                  <div className="item-price">$85.00</div>
-                </div>
+                ))}
               </div>
-              <div className="order-footer">
-                <button className="btn btn-outline">Buy Again</button>
-                <div className="order-total">
-                  <span>Total:</span>
-                  <strong>$85.00</strong>
-                </div>
-              </div>
-            </div>
-          </div>
+            </>
+          )}
         </main>
       </div>
     </div>

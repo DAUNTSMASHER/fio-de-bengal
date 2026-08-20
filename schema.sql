@@ -46,3 +46,30 @@ INSERT INTO Inventory (category, label, quantity) VALUES
 ('density', '60-90', '100-120'),
 ('density', '95-110', '100-120'),
 ('density', '115-130', '200-230');
+
+DROP TABLE IF EXISTS Inquiries;
+DROP TABLE IF EXISTS Messages;
+
+CREATE TABLE Inquiries (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    buyer_email TEXT NOT NULL,
+    product_id INTEGER,
+    product_name TEXT NOT NULL,
+    base TEXT,
+    color TEXT,
+    density TEXT,
+    quantity INTEGER,
+    offered_price REAL,
+    final_price REAL,
+    status TEXT DEFAULT 'Negotiating',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE Messages (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    inquiry_id INTEGER NOT NULL,
+    sender_role TEXT NOT NULL,
+    sender_name TEXT,
+    message TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

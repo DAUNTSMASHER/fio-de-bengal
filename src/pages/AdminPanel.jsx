@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { Package, ShoppingCart, Users, LogOut, UploadCloud, Archive } from 'lucide-react';
+import { Package, ShoppingCart, Users, LogOut, UploadCloud, Archive, MessageSquare } from 'lucide-react';
+import ChatWindow from '../components/ChatWindow';
 import './AdminPanel.css';
 
 const AdminPanel = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState('dashboard');
+  const [activeTab, setActiveTab] = useState('negotiations');
   
   // Product State
   const [uploading, setUploading] = useState(false);
@@ -20,14 +21,30 @@ const AdminPanel = () => {
   const [inventory, setInventory] = useState([]);
   const [activeInventoryTab, setActiveInventoryTab] = useState('base');
 
+  // Negotiations State
+  const [inquiries, setInquiries] = useState([]);
+  const [activeInquiry, setActiveInquiry] = useState(null);
+
   useEffect(() => {
     if (user && user.role === 'admin') {
       fetch(`/api/inventory?t=${new Date().getTime()}`)
         .then(res => res.json())
         .then(data => setInventory(data || []))
-        .catch(err => console.error("Error fetching inventory", err));
+        .catch(err => console.error(err));
+        
+      fetchInquiries();
     }
   }, [user]);
+
+  const fetchInquiries = async () => {
+    try {
+      const res = await fetch(`/api/inquiries?t=${new Date().getTime()}`);
+      const data = await res.json();
+      setInquiries(data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   // Protect route
   if (!user || user.role !== 'admin') {
@@ -54,11 +71,9 @@ const AdminPanel = () => {
         body: formData
       });
       const data = await res.json();
-      
       if (!res.ok) throw new Error(data.error || 'Upload failed');
-      
       setUploadedImageUrl(data.url);
-      alert('Image successfully uploaded to Cloudinary!');
+      alert('Image successfully uploaded!');
     } catch (err) {
       alert('Upload Error: ' + err.message);
     } finally {
@@ -68,7 +83,7 @@ const AdminPanel = () => {
 
   const handleProductSubmit = async (e) => {
     e.preventDefault();
-    if (!productName || !productPrice) return alert("Name and price are required");
+    if (!productName || !productPrice) return alert("Name and price required");
 
     try {
       const res = await fetch('/api/products', {
@@ -81,14 +96,10 @@ const AdminPanel = () => {
           image: uploadedImageUrl
         })
       });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Failed to save product');
+      if (!res.ok) throw new Error('Failed to save product');
 
       alert("Product saved to database successfully!");
-      setProductName('');
-      setProductPrice('');
-      setProductDescription('');
-      setUploadedImageUrl('');
+      setProductName(''); setProductPrice(''); setProductDescription(''); setUploadedImageUrl('');
     } catch (err) {
       alert("Error saving product: " + err.message);
     }
@@ -104,14 +115,10 @@ const AdminPanel = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id, quantity: newQty })
       });
-      const data = await res.json();
-      
-      if (!res.ok) throw new Error(data.error || 'Failed to update inventory');
-      
-      // Optimistically update local state
+      if (!res.ok) throw new Error('Failed to update');
       setInventory(inventory.map(item => item.id === id ? { ...item, quantity: newQty } : item));
     } catch (err) {
-      alert("Error updating inventory: " + err.message);
+      alert("Error updating inventory");
     }
   };
 
@@ -126,6 +133,9 @@ const AdminPanel = () => {
           <button className={`nav-item ${activeTab === 'dashboard' ? 'active' : ''}`} onClick={() => setActiveTab('dashboard')}>
             <Package size={20} /> Dashboard
           </button>
+          <button className={`nav-item ${activeTab === 'negotiations' ? 'active' : ''}`} onClick={() => { setActiveTab('negotiations'); setActiveInquiry(null); fetchInquiries(); }}>
+            <MessageSquare size={20} /> Negotiations
+          </button>
           <button className={`nav-item ${activeTab === 'inventory' ? 'active' : ''}`} onClick={() => setActiveTab('inventory')}>
             <Archive size={20} /> Inventory
           </button>
@@ -133,7 +143,7 @@ const AdminPanel = () => {
             <ShoppingCart size={20} /> Add Product
           </button>
           <button className={`nav-item ${activeTab === 'orders' ? 'active' : ''}`} onClick={() => setActiveTab('orders')}>
-            <Users size={20} /> Orders
+            <Users size={20} /> Finalized Orders
           </button>
         </nav>
         <button className="nav-item logout-btn" onClick={handleLogout}>
@@ -150,19 +160,68 @@ const AdminPanel = () => {
         </header>
 
         <div className="admin-body">
+          {activeTab === 'negotiations' && (
+            <div className="admin-card">
+              {activeInquiry ? (
+                <div>
+                  <button className="btn btn-outline" style={{marginBottom: '16px'}} onClick={() => { setActiveInquiry(null); fetchInquiries(); }}>
+                    &larr; Back to Inbox
+                  </button>
+                  <ChatWindow 
+                    inquiry={activeInquiry} 
+                    currentUser={user} 
+                    onOfferSent={() => fetchInquiries()} 
+                  />
+                </div>
+              ) : (
+                <>
+                  <h2>Quotation Inbox</h2>
+                  <table className="admin-table">
+                    <thead>
+                      <tr>
+                        <th>Buyer</th>
+                        <th>Product</th>
+                        <th>Qty</th>
+                        <th>Offered Price</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {inquiries.length === 0 ? (
+                        <tr><td colSpan="6" style={{textAlign:'center', padding: '20px'}}>No active inquiries.</td></tr>
+                      ) : (
+                        inquiries.map(inq => (
+                          <tr key={inq.id}>
+                            <td>{inq.buyer_email}</td>
+                            <td>{inq.product_name}</td>
+                            <td>{inq.quantity}</td>
+                            <td>${Number(inq.offered_price).toFixed(2)}</td>
+                            <td><span className={`status-badge ${inq.status === 'Completed' ? 'delivered' : 'pending'}`}>{inq.status}</span></td>
+                            <td>
+                              <button className="btn btn-primary" style={{ padding: '6px 12px', fontSize: '0.85rem' }} onClick={() => setActiveInquiry(inq)}>
+                                Open Chat
+                              </button>
+                            </td>
+                          </tr>
+                        ))
+                      )}
+                    </tbody>
+                  </table>
+                </>
+              )}
+            </div>
+          )}
+
           {activeTab === 'dashboard' && (
             <div className="dashboard-stats">
               <div className="stat-card">
-                <h3>Total Sales</h3>
-                <p className="stat-value">$12,450</p>
+                <h3>Total Active Inquiries</h3>
+                <p className="stat-value">{inquiries.filter(i => i.status !== 'Completed').length}</p>
               </div>
               <div className="stat-card">
-                <h3>Active Orders</h3>
-                <p className="stat-value">14</p>
-              </div>
-              <div className="stat-card">
-                <h3>Total Products</h3>
-                <p className="stat-value">24</p>
+                <h3>Finalized Deals</h3>
+                <p className="stat-value">{inquiries.filter(i => i.status === 'Completed').length}</p>
               </div>
             </div>
           )}
@@ -177,24 +236,15 @@ const AdminPanel = () => {
                   <button className={`btn ${activeInventoryTab === 'density' ? 'btn-primary' : 'btn-outline'}`} onClick={() => setActiveInventoryTab('density')}>Densities</button>
                 </div>
               </div>
-              
               <table className="admin-table">
-                <thead>
-                  <tr>
-                    <th>{activeInventoryTab.toUpperCase()} Label</th>
-                    <th>Current Quantity</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
+                <thead><tr><th>{activeInventoryTab.toUpperCase()} Label</th><th>Quantity</th><th>Action</th></tr></thead>
                 <tbody>
                   {inventory.filter(i => i.category === activeInventoryTab).map(item => (
                     <tr key={item.id}>
                       <td><strong>{item.label}</strong></td>
                       <td><span className="status-badge shipped">{item.quantity}</span></td>
                       <td>
-                        <button className="btn btn-outline" style={{ padding: '4px 12px', fontSize: '0.85rem' }} onClick={() => handleInventoryUpdate(item.id, item.quantity)}>
-                          Edit Stock
-                        </button>
+                        <button className="btn btn-outline" style={{ padding: '4px 12px', fontSize: '0.85rem' }} onClick={() => handleInventoryUpdate(item.id, item.quantity)}>Edit Stock</button>
                       </td>
                     </tr>
                   ))}
@@ -205,35 +255,17 @@ const AdminPanel = () => {
 
           {activeTab === 'products' && (
             <div className="admin-card">
-              <div className="card-header">
-                <h2>Add New Product</h2>
-              </div>
+              <div className="card-header"><h2>Add New Product</h2></div>
               <form className="admin-form" onSubmit={handleProductSubmit}>
-                <div className="form-group">
-                  <label>Product Name</label>
-                  <input type="text" placeholder="e.g. Raw Bengal Wavy Bundle" value={productName} onChange={e => setProductName(e.target.value)} required />
-                </div>
-                <div className="form-group">
-                  <label>Price ($)</label>
-                  <input type="number" placeholder="150" value={productPrice} onChange={e => setProductPrice(e.target.value)} required />
-                </div>
-                <div className="form-group">
-                  <label>Description</label>
-                  <textarea placeholder="Product description..." value={productDescription} onChange={e => setProductDescription(e.target.value)} rows="3"></textarea>
-                </div>
+                {/* Product form identical to previous */}
+                <div className="form-group"><label>Product Name</label><input type="text" value={productName} onChange={e => setProductName(e.target.value)} required /></div>
+                <div className="form-group"><label>Reference Price ($)</label><input type="number" value={productPrice} onChange={e => setProductPrice(e.target.value)} required /></div>
+                <div className="form-group"><label>Description</label><textarea value={productDescription} onChange={e => setProductDescription(e.target.value)} rows="3"></textarea></div>
                 <div className="form-group">
                   <label>Product Image (Cloudinary)</label>
                   <div className="upload-zone">
-                    {uploadedImageUrl ? (
-                       <img src={uploadedImageUrl} alt="Uploaded" style={{maxHeight: '150px'}} />
-                    ) : (
-                      <>
-                        <UploadCloud size={32} color="var(--border-muted)" />
-                        <p>Drag and drop image here, or click to browse</p>
-                        <input type="file" onChange={handleImageUpload} accept="image/*" />
-                      </>
-                    )}
-                    {uploading && <p className="upload-status">Uploading to Cloudinary...</p>}
+                    {uploadedImageUrl ? <img src={uploadedImageUrl} alt="Uploaded" style={{maxHeight: '150px'}} /> : <><UploadCloud size={32} color="var(--border-muted)" /><input type="file" onChange={handleImageUpload} accept="image/*" /></>}
+                    {uploading && <p className="upload-status">Uploading...</p>}
                   </div>
                 </div>
                 <button type="submit" className="btn btn-primary">Save Product</button>
@@ -243,32 +275,21 @@ const AdminPanel = () => {
 
           {activeTab === 'orders' && (
             <div className="admin-card">
-              <h2>Recent Orders</h2>
+              <h2>Finalized Deals</h2>
               <table className="admin-table">
                 <thead>
-                  <tr>
-                    <th>Order ID</th>
-                    <th>Customer</th>
-                    <th>Date</th>
-                    <th>Status</th>
-                    <th>Total</th>
-                  </tr>
+                  <tr><th>Order ID</th><th>Buyer</th><th>Product</th><th>Final Price</th><th>Status</th></tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td>#ORD-001</td>
-                    <td>Jane Doe</td>
-                    <td>Oct 12, 2024</td>
-                    <td><span className="status-badge pending">Pending</span></td>
-                    <td>$450.00</td>
-                  </tr>
-                  <tr>
-                    <td>#ORD-002</td>
-                    <td>Sarah Smith</td>
-                    <td>Oct 11, 2024</td>
-                    <td><span className="status-badge shipped">Shipped</span></td>
-                    <td>$120.00</td>
-                  </tr>
+                  {inquiries.filter(i => i.status === 'Completed').map(inq => (
+                    <tr key={inq.id}>
+                      <td>#DEAL-{inq.id}</td>
+                      <td>{inq.buyer_email}</td>
+                      <td>{inq.product_name} ({inq.quantity}x)</td>
+                      <td>${(inq.final_price * inq.quantity).toFixed(2)}</td>
+                      <td><span className="status-badge delivered">Paid & Shipped</span></td>
+                    </tr>
+                  ))}
                 </tbody>
               </table>
             </div>
