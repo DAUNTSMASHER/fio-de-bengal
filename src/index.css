@@ -20,6 +20,10 @@
   --font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 }
 
+html {
+  font-size: 17px;
+}
+
 *, *::before, *::after {
   box-sizing: border-box;
 }
