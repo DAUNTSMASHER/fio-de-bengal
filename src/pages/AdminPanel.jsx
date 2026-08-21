@@ -259,7 +259,13 @@ const AdminPanel = () => {
                         inquiries.map(inq => (
                           <tr key={inq.id}>
                             <td>{inq.buyer_email}</td>
-                            <td>{inq.product_name}</td>
+                            <td>
+                              <strong>{inq.product_name}</strong>
+                              <br/>
+                              <span style={{fontSize: '0.8rem', color: 'var(--text-secondary)'}}>
+                                {inq.base} | {inq.color} | {inq.length} {inq.model_variant ? `| Var: ${inq.model_variant}` : ''}
+                              </span>
+                            </td>
                             <td>{inq.quantity}</td>
                             <td>${Number(inq.offered_price).toFixed(2)}</td>
                             <td><span className={`status-badge ${inq.status === 'Completed' ? 'delivered' : 'pending'}`}>{inq.status}</span></td>

@@ -15,6 +15,7 @@ const ProductPage = () => {
   const [inventory, setInventory] = useState([]);
   
   // Quotation States
+  const [modelVariant, setModelVariant] = useState('');
   const [selectedBase, setSelectedBase] = useState('');
   const [selectedColor, setSelectedColor] = useState('');
   const [selectedLength, setSelectedLength] = useState('');
@@ -78,9 +79,10 @@ const ProductPage = () => {
           buyer_email: user.email,
           product_id: product.id,
           product_name: product.name,
+          model_variant: modelVariant,
           base: selectedBase,
           color: selectedColor,
-          length: selectedLength, // Assuming the backend is updated to accept length instead of density if needed, or we just pass it along
+          length: selectedLength,
           quantity: parseInt(quantity),
           offered_price: parseFloat(offeredPrice)
         })
@@ -142,6 +144,10 @@ const ProductPage = () => {
               </div>
             ) : (
               <div className="quotation-form">
+                <div className="form-group">
+                  <label>Model Variant (Optional)</label>
+                  <input type="text" placeholder="e.g. Standard, Premium Edition" value={modelVariant} onChange={e => setModelVariant(e.target.value)} className="form-control" />
+                </div>
                 <div className="form-group">
                   <label>Base Size</label>
                   <select value={selectedBase} onChange={e => setSelectedBase(e.target.value)} className="form-control">
@@ -224,7 +230,7 @@ const ProductPage = () => {
         <div className="modal-overlay">
           <div className="modal-content" style={{ maxWidth: '500px' }}>
             <h2>Send Message to Admin</h2>
-            <p>You are offering <strong>${offeredPrice}</strong> for <strong>{quantity}x</strong> of {product.name} ({selectedBase}, {selectedLength}, {selectedColor}).</p>
+            <p>You are offering <strong>${offeredPrice}</strong> for <strong>{quantity}x</strong> of {product.name} {modelVariant ? `(${modelVariant})` : ''} ({selectedBase}, {selectedLength}, {selectedColor}).</p>
             <div className="form-group" style={{marginTop: '20px'}}>
               <label>Message (Optional)</label>
               <textarea 

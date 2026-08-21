@@ -37,9 +37,9 @@ export async function onRequestPost(context) {
 
     if (env.DB) {
       const { success, meta } = await env.DB.prepare(
-        "INSERT INTO Inquiries (buyer_email, product_id, product_name, base, color, density, quantity, offered_price) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
+        "INSERT INTO Inquiries (buyer_email, product_id, product_name, model_variant, base, color, length, density, quantity, offered_price) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
       ).bind(
-        body.buyer_email, body.product_id, body.product_name, body.base, body.color, body.density, body.quantity, body.offered_price
+        body.buyer_email, body.product_id, body.product_name, body.model_variant, body.base, body.color, body.length, body.density, body.quantity, body.offered_price
       ).run();
       
       return new Response(JSON.stringify({ success, meta }), { headers: { "Content-Type": "application/json" } });
