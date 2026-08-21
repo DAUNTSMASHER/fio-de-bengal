@@ -18,6 +18,35 @@ const TrackingPage = () => {
     { id: 'FIO-22948', quantity: 8, value: 1840.00, carrier: 'UPS', destination: 'France', status: 'Delivered', time: '1 day ago', color: '#10b981' }
   ];
 
+  const countryToFlag = (country) => {
+    if (!country) return '🌍';
+    const map = {
+      'United States': '🇺🇸', 'USA': '🇺🇸', 'US': '🇺🇸',
+      'United Kingdom': '🇬🇧', 'UK': '🇬🇧',
+      'Australia': '🇦🇺',
+      'Canada': '🇨🇦',
+      'Germany': '🇩🇪',
+      'France': '🇫🇷',
+      'India': '🇮🇳',
+      'Japan': '🇯🇵',
+      'China': '🇨🇳',
+      'Italy': '🇮🇹',
+      'Spain': '🇪🇸',
+      'Brazil': '🇧🇷',
+      'Mexico': '🇲🇽',
+      'South Korea': '🇰🇷',
+      'Netherlands': '🇳🇱',
+      'Switzerland': '🇨🇭',
+      'Sweden': '🇸🇪',
+      'Singapore': '🇸🇬',
+      'UAE': '🇦🇪', 'United Arab Emirates': '🇦🇪',
+      'Saudi Arabia': '🇸🇦',
+      'Bangladesh': '🇧🇩',
+      'New Zealand': '🇳🇿'
+    };
+    return map[country] || '🌍';
+  };
+
   const handleSearch = async (e) => {
     e.preventDefault();
     if (!orderNo.trim()) return;
@@ -51,12 +80,12 @@ const TrackingPage = () => {
           background: '#4d148c', 
           display: 'inline-flex', 
           alignItems: 'center',
-          padding: size === 'large' ? '4px 10px' : '2px 8px',
+          padding: size === 'large' ? '4px 12px' : '3px 10px',
           borderRadius: '2px',
           fontFamily: 'Arial, Helvetica, sans-serif',
           fontWeight: '900',
-          fontSize: size === 'large' ? '22px' : '16px',
-          letterSpacing: '-1px',
+          fontSize: size === 'large' ? '28px' : '20px',
+          letterSpacing: '-1.5px',
           lineHeight: 1,
           verticalAlign: 'middle'
         }}>
@@ -67,11 +96,11 @@ const TrackingPage = () => {
     }
     
     if (carrier === 'DHL') {
-      return <img src="https://www.dhl.com/content/dam/dhl/global/core/images/logos/dhl-logo.svg" alt="DHL" style={{height: size === 'large' ? '24px' : '18px', objectFit: 'contain', verticalAlign: 'middle'}} />;
+      return <img src="https://www.dhl.com/content/dam/dhl/global/core/images/logos/dhl-logo.svg" alt="DHL" style={{height: size === 'large' ? '32px' : '22px', objectFit: 'contain', verticalAlign: 'middle'}} />;
     }
     
     if (carrier === 'UPS') {
-      return <img src="https://www.ups.com/assets/resources/images/UPS_logo.svg" alt="UPS" style={{height: size === 'large' ? '32px' : '26px', objectFit: 'contain', verticalAlign: 'middle'}} />;
+      return <img src="https://www.ups.com/assets/resources/images/UPS_logo.svg" alt="UPS" style={{height: size === 'large' ? '42px' : '30px', objectFit: 'contain', verticalAlign: 'middle'}} />;
     }
     
     return <span>{carrier}</span>;
@@ -132,7 +161,10 @@ const TrackingPage = () => {
               </div>
               <div className="summary-item">
                 <span className="summary-label">Destination</span>
-                <span className="summary-value">{trackingData.delivery_country}</span>
+                <span className="summary-value">
+                  <span style={{fontSize: '1.2em', marginRight: '6px'}}>{countryToFlag(trackingData.delivery_country)}</span>
+                  {trackingData.delivery_country}
+                </span>
               </div>
               <div className="summary-item status-highlight">
                 <span className="summary-label">Current Status</span>
@@ -193,7 +225,10 @@ const TrackingPage = () => {
                       </td>
                       <td>{order.quantity} Units</td>
                       <td>${order.value.toFixed(2)}</td>
-                      <td>{order.destination}</td>
+                      <td>
+                        <span style={{fontSize: '1.2em', marginRight: '6px'}}>{countryToFlag(order.destination)}</span>
+                        {order.destination}
+                      </td>
                       <td style={{color: order.color, fontWeight: 600}}>{order.status}</td>
                       <td style={{color: 'var(--text-secondary)', fontSize: '0.9rem'}}>{order.time}</td>
                     </tr>

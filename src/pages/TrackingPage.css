@@ -216,6 +216,14 @@
 }
 
 @media (max-width: 768px) {
+  .tracking-page {
+    padding: 30px 0 60px;
+  }
+
+  .tracking-header h1 {
+    font-size: 2rem;
+  }
+
   .tracking-form {
     flex-direction: column;
   }
@@ -225,7 +233,17 @@
   }
 
   .tracking-summary {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
+    padding: 20px;
+    gap: 15px;
+  }
+  
+  .tracking-timeline-container {
+    padding: 20px;
+  }
+
+  .live-orders-title {
+    font-size: 1.3rem;
   }
 }
 
