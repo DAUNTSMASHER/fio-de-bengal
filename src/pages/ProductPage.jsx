@@ -23,9 +23,6 @@ const ProductPage = () => {
   const [selectedLength, setSelectedLength] = useState('');
   const [quantity, setQuantity] = useState(1);
   const [offeredPrice, setOfferedPrice] = useState('');
-  
-  const [quantity, setQuantity] = useState(1);
-  const [offeredPrice, setOfferedPrice] = useState('');
 
   useEffect(() => {
     window.scrollTo(0, 0);
