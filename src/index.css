@@ -85,6 +85,27 @@ button {
   color: var(--text-primary);
 }
 
+/* Outline Button Capsule */
+.btn-outline {
+  background-color: transparent;
+  color: var(--text-primary);
+  border: 1px solid var(--border-muted);
+  padding: 12px 24px;
+  border-radius: 9999px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 0.875rem;
+}
+
+.btn-outline:hover {
+  background-color: var(--border-muted);
+}
+
 /* Utility Classes */
 .container {
   max-width: 1200px;
