@@ -230,7 +230,7 @@
 }
 
 .live-dummy-orders {
-  max-width: 1000px;
+  max-width: 100%;
   margin: 50px auto 0;
   padding-top: 50px;
   border-top: 1px solid rgba(0,0,0,0.05);
@@ -285,6 +285,7 @@
   text-transform: uppercase;
   letter-spacing: 0.5px;
   border-bottom: 1px solid var(--border-muted);
+  white-space: nowrap;
 }
 
 .dummy-orders-table td {
@@ -292,6 +293,7 @@
   border-bottom: 1px solid rgba(0,0,0,0.04);
   color: var(--text-primary);
   font-size: 1rem;
+  white-space: nowrap;
 }
 
 .dummy-orders-table tr:last-child td {
