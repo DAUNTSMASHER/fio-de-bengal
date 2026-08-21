@@ -108,7 +108,15 @@ const BuyerPanel = () => {
                         inquiries.map(inq => (
                           <tr key={inq.id}>
                             <td>{inq.product_name}</td>
-                            <td>{inq.base}, {inq.color}, {inq.density}</td>
+                            <td>
+                              {inq.cart_items ? (
+                                <span style={{fontSize: '0.8rem', color: 'var(--text-secondary)'}}>
+                                  Bulk Order ({JSON.parse(inq.cart_items).length} configs)
+                                </span>
+                              ) : (
+                                <span>{inq.base}, {inq.color}, {inq.length} {inq.model_variant ? `| ${inq.model_variant}` : ''}</span>
+                              )}
+                            </td>
                             <td>{inq.quantity}</td>
                             <td>${Number(inq.offered_price).toFixed(2)}</td>
                             <td><span className={`status-badge ${inq.status === 'Completed' ? 'delivered' : 'pending'}`}>{inq.status}</span></td>
@@ -149,7 +157,15 @@ const BuyerPanel = () => {
                       <tr key={inq.id}>
                         <td>#DEAL-{inq.id}</td>
                         <td>{inq.product_name}</td>
-                        <td>{inq.base}, {inq.color}, {inq.density}</td>
+                        <td>
+                          {inq.cart_items ? (
+                            <span style={{fontSize: '0.8rem', color: 'var(--text-secondary)'}}>
+                              Bulk Order ({JSON.parse(inq.cart_items).length} configs)
+                            </span>
+                          ) : (
+                            <span>{inq.base}, {inq.color}, {inq.length} {inq.model_variant ? `| ${inq.model_variant}` : ''}</span>
+                          )}
+                        </td>
                         <td>{inq.quantity}</td>
                         <td>${(inq.final_price * inq.quantity).toFixed(2)}</td>
                         <td><span className="status-badge delivered">Paid & Shipped</span></td>

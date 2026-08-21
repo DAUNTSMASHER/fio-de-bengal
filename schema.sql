@@ -86,6 +86,7 @@ CREATE TABLE Inquiries (
     quantity INTEGER,
     offered_price REAL,
     final_price REAL,
+    cart_items TEXT,
     status TEXT DEFAULT 'Negotiating',
     shipping_address TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP

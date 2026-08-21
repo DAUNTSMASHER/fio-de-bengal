@@ -166,8 +166,16 @@ const ChatWindow = ({ inquiry, currentUser, onOfferSent, onDealFinalized }) => {
     <div className="chat-window-container">
       <div className="chat-header">
         <div className="chat-title">
-          <h3>Negotiation: {inquiry.product_name}</h3>
-          <p>Specs: {inquiry.base} | {inquiry.color} | {inquiry.density} | Qty: {inquiry.quantity}</p>
+          <h3 style={{margin: '0 0 5px 0'}}>Negotiation: {inquiry.product_name}</h3>
+          {inquiry.cart_items ? (
+            <div style={{fontSize: '0.85rem', color: 'var(--text-secondary)'}}>
+              {JSON.parse(inquiry.cart_items).map((item, idx) => (
+                <div key={idx} style={{marginBottom: '4px'}}>- {item.quantity}x {item.name} ({item.options.base}, {item.options.color}, {item.options.length} {item.options.modelVariant ? `| Var: ${item.options.modelVariant}` : ''})</div>
+              ))}
+            </div>
+          ) : (
+            <p style={{margin: 0, fontSize: '0.9rem', color: 'var(--text-secondary)'}}>Specs: {inquiry.base} | {inquiry.color} | {inquiry.length} | Qty: {inquiry.quantity}</p>
+          )}
         </div>
         <div className="chat-status">
           <span className={`status-badge ${inquiry.status === 'Completed' ? 'delivered' : 'pending'}`}>

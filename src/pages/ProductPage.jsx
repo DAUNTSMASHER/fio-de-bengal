@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useCart } from '../context/CartContext';
 import './ProductPage.css';
 
 const ProductPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { addToCart } = useCart();
   
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -22,10 +24,8 @@ const ProductPage = () => {
   const [quantity, setQuantity] = useState(1);
   const [offeredPrice, setOfferedPrice] = useState('');
   
-  // Modal States
-  const [showModal, setShowModal] = useState(false);
-  const [message, setMessage] = useState('');
-  const [submitting, setSubmitting] = useState(false);
+  const [quantity, setQuantity] = useState(1);
+  const [offeredPrice, setOfferedPrice] = useState('');
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -59,59 +59,25 @@ const ProductPage = () => {
   const uniqueColors = [...new Set(inventory.map(i => i.color))];
   const uniqueLengths = [...new Set(inventory.map(i => i.length))];
 
-  const handleOpenModal = () => {
+  const handleAddToCart = () => {
+    if (!user) return alert("You must be logged in to build a wholesale quotation.");
     if (!selectedBase || !selectedColor || !selectedLength || !quantity || !offeredPrice) {
       return alert("Please fill out all quotation fields before proceeding.");
     }
-    setShowModal(true);
-  };
-
-  const submitInquiry = async () => {
-    if (!user) return alert("You must be logged in!");
-    setSubmitting(true);
     
-    try {
-      // 1. Create Inquiry
-      const inqRes = await fetch('/api/inquiries', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          buyer_email: user.email,
-          product_id: product.id,
-          product_name: product.name,
-          model_variant: modelVariant,
-          base: selectedBase,
-          color: selectedColor,
-          length: selectedLength,
-          quantity: parseInt(quantity),
-          offered_price: parseFloat(offeredPrice)
-        })
-      });
-      const inqData = await inqRes.json();
-      if (!inqRes.ok) throw new Error(inqData.error || 'Failed to submit inquiry');
-      
-      const inquiryId = inqData.meta?.last_row_id || Math.floor(Math.random()*10000);
-
-      // 2. Send Initial Message
-      await fetch('/api/messages', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          inquiry_id: inquiryId,
-          sender_role: 'buyer',
-          sender_name: user.name,
-          message: message || "I would like to negotiate this deal."
-        })
-      });
-
-      alert("Quotation submitted successfully! You can track this in your dashboard.");
-      setShowModal(false);
-      navigate('/dashboard'); // Navigate to buyer panel
-    } catch (err) {
-      alert("Error: " + err.message);
-    } finally {
-      setSubmitting(false);
-    }
+    addToCart(
+      { id: product.id, name: product.name, price: parseFloat(offeredPrice) }, 
+      parseInt(quantity), 
+      {
+        modelVariant: modelVariant,
+        base: selectedBase,
+        color: selectedColor,
+        length: selectedLength
+      }
+    );
+    
+    alert(`Added ${quantity}x ${product.name} to your Wholesale Cart!`);
+    navigate('/cart');
   };
 
   if (loading) return <div className="page-layout"><div className="container" style={{padding: '100px 0', textAlign: 'center'}}><h2>Loading Product...</h2></div></div>;
@@ -179,8 +145,8 @@ const ProductPage = () => {
                     <input type="number" min="1" step="0.01" placeholder="e.g. 110.00" value={offeredPrice} onChange={e => setOfferedPrice(e.target.value)} className="form-control" />
                   </div>
                 </div>
-                <button className="btn btn-primary w-100" onClick={handleOpenModal} style={{marginTop: '10px'}}>
-                  Send Inquiry & Message
+                <button className="btn btn-primary w-100" onClick={handleAddToCart} style={{marginTop: '10px'}}>
+                  Add to Wholesale Cart
                 </button>
               </div>
             )}
@@ -224,32 +190,6 @@ const ProductPage = () => {
           </div>
         </div>
       </div>
-
-      {/* Message Modal */}
-      {showModal && (
-        <div className="modal-overlay">
-          <div className="modal-content" style={{ maxWidth: '500px' }}>
-            <h2>Send Message to Admin</h2>
-            <p>You are offering <strong>${offeredPrice}</strong> for <strong>{quantity}x</strong> of {product.name} {modelVariant ? `(${modelVariant})` : ''} ({selectedBase}, {selectedLength}, {selectedColor}).</p>
-            <div className="form-group" style={{marginTop: '20px'}}>
-              <label>Message (Optional)</label>
-              <textarea 
-                rows="4" 
-                className="form-control" 
-                placeholder="Include any additional requirements or negotiation notes..."
-                value={message}
-                onChange={e => setMessage(e.target.value)}
-              ></textarea>
-            </div>
-            <div className="modal-actions" style={{display: 'flex', gap: '10px', marginTop: '20px'}}>
-              <button className="btn btn-outline" onClick={() => setShowModal(false)} disabled={submitting}>Cancel</button>
-              <button className="btn btn-primary" onClick={submitInquiry} disabled={submitting}>
-                {submitting ? 'Sending...' : 'Submit Quotation'}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
