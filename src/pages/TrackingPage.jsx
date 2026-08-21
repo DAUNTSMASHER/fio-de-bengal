@@ -44,13 +44,37 @@ const TrackingPage = () => {
     }
   };
 
-  const getCarrierLogo = (carrier) => {
-    switch (carrier) {
-      case 'FedEx': return 'https://upload.wikimedia.org/wikipedia/commons/9/9d/FedEx_Express.svg';
-      case 'DHL': return 'https://www.dhl.com/content/dam/dhl/global/core/images/logos/dhl-logo.svg';
-      case 'UPS': return 'https://www.ups.com/assets/resources/images/UPS_logo.svg';
-      default: return null;
+  const CarrierLogo = ({ carrier, size = 'small' }) => {
+    if (carrier === 'FedEx') {
+      return (
+        <div style={{
+          background: '#4d148c', 
+          display: 'inline-flex', 
+          alignItems: 'center',
+          padding: size === 'large' ? '4px 10px' : '2px 8px',
+          borderRadius: '2px',
+          fontFamily: 'Arial, Helvetica, sans-serif',
+          fontWeight: '900',
+          fontSize: size === 'large' ? '22px' : '16px',
+          letterSpacing: '-1px',
+          lineHeight: 1,
+          verticalAlign: 'middle'
+        }}>
+          <span style={{color: 'white'}}>Fed</span>
+          <span style={{color: '#ff6600'}}>Ex</span>
+        </div>
+      );
     }
+    
+    if (carrier === 'DHL') {
+      return <img src="https://www.dhl.com/content/dam/dhl/global/core/images/logos/dhl-logo.svg" alt="DHL" style={{height: size === 'large' ? '24px' : '18px', objectFit: 'contain', verticalAlign: 'middle'}} />;
+    }
+    
+    if (carrier === 'UPS') {
+      return <img src="https://www.ups.com/assets/resources/images/UPS_logo.svg" alt="UPS" style={{height: size === 'large' ? '32px' : '26px', objectFit: 'contain', verticalAlign: 'middle'}} />;
+    }
+    
+    return <span>{carrier}</span>;
   };
 
   return (
@@ -95,11 +119,7 @@ const TrackingPage = () => {
               <div className="summary-item">
                 <span className="summary-label">Carrier</span>
                 <span className="summary-value">
-                  {getCarrierLogo(trackingData.carrier) ? (
-                    <img src={getCarrierLogo(trackingData.carrier)} alt={trackingData.carrier} style={{height: '20px', marginTop: '4px'}} />
-                  ) : (
-                    trackingData.carrier || 'Standard'
-                  )}
+                  <CarrierLogo carrier={trackingData.carrier} size="large" />
                 </span>
               </div>
               <div className="summary-item">
@@ -169,11 +189,7 @@ const TrackingPage = () => {
                     <tr key={idx}>
                       <td><strong>{order.id}</strong></td>
                       <td>
-                        {getCarrierLogo(order.carrier) ? (
-                          <img src={getCarrierLogo(order.carrier)} alt={order.carrier} style={{height: '18px'}} />
-                        ) : (
-                          order.carrier
-                        )}
+                        <CarrierLogo carrier={order.carrier} size="small" />
                       </td>
                       <td>{order.quantity} Units</td>
                       <td>${order.value.toFixed(2)}</td>
