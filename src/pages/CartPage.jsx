@@ -80,7 +80,7 @@ const CartPage = () => {
           <div className="cart-layout">
             <div className="cart-items">
               {cart.map((item, index) => (
-                <div key={index} className="cart-item" style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'white', padding: '20px', borderRadius: '12px', border: '1px solid var(--border-muted)', marginBottom: '15px'}}>
+                <div key={index} className="cart-item" style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'white', padding: '32px 40px', borderRadius: '12px', border: '1px solid var(--border-muted)', marginBottom: '15px'}}>
                   <div className="item-details" style={{flex: 1}}>
                     <h3 style={{margin: '0 0 10px 0'}}>{item.name} {item.options.modelVariant ? `(${item.options.modelVariant})` : ''}</h3>
                     <div style={{display: 'flex', gap: '15px', color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: '10px'}}>
@@ -109,7 +109,7 @@ const CartPage = () => {
                 </div>
               ))}
             </div>
-            <div className="cart-summary" style={{background: 'white', padding: '24px', borderRadius: '12px', border: '1px solid var(--border-muted)', height: 'fit-content'}}>
+            <div className="cart-summary" style={{background: 'white', padding: '40px', borderRadius: '12px', border: '1px solid var(--border-muted)', height: 'fit-content'}}>
               <h3 style={{borderBottom: '2px solid var(--accent-gold)', paddingBottom: '10px', marginBottom: '20px'}}>Quotation Summary</h3>
               <div className="summary-row" style={{display: 'flex', justifyContent: 'space-between', marginBottom: '15px'}}>
                 <span>Total Pieces</span>
