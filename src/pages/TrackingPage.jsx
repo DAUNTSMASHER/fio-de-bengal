@@ -197,8 +197,10 @@ const TrackingPage = () => {
             </div>
           </div>
         )}
+      </div>
 
-        {!trackingData && (
+      {!trackingData && (
+        <div className="live-dummy-orders-wrapper">
           <div className="live-dummy-orders">
             <h3 className="live-orders-title">
               <div className="pulsing-dot"></div> Live Shipments
@@ -237,8 +239,8 @@ const TrackingPage = () => {
               </table>
             </div>
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 };
