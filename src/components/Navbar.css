@@ -131,7 +131,24 @@
   color: var(--text-primary);
 }
 
+.mobile-menu-btn {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-primary);
+  padding: 8px;
+}
+
 @media (max-width: 768px) {
+  .navbar-container {
+    height: 80px;
+  }
+  
+  .logo-img {
+    height: 80px;
+  }
+
   .navbar-links {
     display: none;
     position: absolute;
@@ -148,13 +165,7 @@
     display: flex;
   }
   
-  .menu-btn {
+  .mobile-menu-btn {
     display: flex;
-  }
-}
-
-@media (min-width: 769px) {
-  .menu-btn {
-    display: none;
   }
 }

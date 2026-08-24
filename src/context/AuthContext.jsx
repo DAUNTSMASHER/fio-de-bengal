@@ -1,44 +1,61 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { AuthProvider as DescopeAuthProvider, useUser, useDescope } from '@descope/react-sdk';
 
 const AuthContext = createContext();
 
 export const useAuth = () => useContext(AuthContext);
 
-export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(() => {
-    const savedUser = localStorage.getItem('fio-user');
-    return savedUser ? JSON.parse(savedUser) : null;
-  });
+// Custom wrapper around Descope's context to maintain compatibility with the rest of the app
+const CustomAuthProvider = ({ children }) => {
+  const { user: descopeUser, isUserLoading } = useUser();
+  const { logout: descopeLogout } = useDescope();
+  
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
-    if (user) {
-      localStorage.setItem('fio-user', JSON.stringify(user));
+    if (descopeUser) {
+      // Map Descope user to our app's user structure
+      const roles = descopeUser.roleNames || [];
+      const role = roles.includes('Admin') || roles.includes('admin') ? 'admin' : 'buyer';
+      
+      setUser({
+        id: descopeUser.userId,
+        name: descopeUser.name || 'User',
+        email: descopeUser.email,
+        role: role,
+        // In a real app we might pass the session token here if needed by Axios/fetch
+        isPhoneVerified: descopeUser.customAttributes?.isPhoneVerified === true,
+      });
     } else {
-      localStorage.removeItem('fio-user');
+      setUser(null);
     }
-  }, [user]);
+  }, [descopeUser]);
 
   const login = async (email, password) => {
-    // In a real app, this calls /api/auth/login
-    // For now, we mock the auth based on email to demo the panels
-    if (email === 'admin@fiodebengal.com') {
-      const adminUser = { id: 1, name: 'Admin User', email, role: 'admin', token: 'mock-jwt-token-admin' };
-      setUser(adminUser);
-      return adminUser;
-    } else {
-      const buyerUser = { id: 2, name: 'Valued Customer', email, role: 'buyer', token: 'mock-jwt-token-buyer' };
-      setUser(buyerUser);
-      return buyerUser;
-    }
+    // For Descope, login is handled by the UI component (<Descope />)
+    // This stub is left here in case old code calls it, but shouldn't be used
+    console.warn('Login should be handled by the Descope UI component');
   };
 
-  const logout = () => {
+  const logout = async () => {
+    await descopeLogout();
     setUser(null);
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, login, logout, isUserLoading }}>
       {children}
     </AuthContext.Provider>
+  );
+};
+
+export const AuthProvider = ({ children }) => {
+  const projectId = import.meta.env.VITE_DESCOPE_PROJECT_ID || "REPLACE_WITH_DESCOPE_PROJECT_ID";
+  return (
+    <DescopeAuthProvider projectId={projectId}>
+      <CustomAuthProvider>
+        {children}
+      </CustomAuthProvider>
+    </DescopeAuthProvider>
   );
 };

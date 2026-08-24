@@ -1,58 +1,39 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { Descope } from '@descope/react-sdk';
 import './LoginPage.css';
 
 const LoginPage = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const { login } = useAuth();
   const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    const user = await login(email, password);
-    if (user.role === 'admin') {
+  const onSuccess = (e) => {
+    // Descope returns user info in the event payload
+    // We can extract roles to determine where to navigate
+    const user = e.detail.user;
+    const roles = user.roleNames || [];
+    
+    if (roles.includes('Admin') || roles.includes('admin')) {
       navigate('/admin');
     } else {
       navigate('/dashboard');
     }
   };
 
+  const onError = (e) => {
+    console.error('Descope login error:', e);
+  };
+
   return (
     <div className="page-layout texture-marble-venation">
-      <div className="container login-container">
-        <div className="login-box">
-          <h1 className="page-title">Sign In</h1>
-          <p className="login-subtitle">Access your FIO DE BENGAL account.</p>
-          <form onSubmit={handleLogin} className="login-form">
-            <div className="form-group">
-              <label>Email Address</label>
-              <input 
-                type="email" 
-                value={email} 
-                onChange={(e) => setEmail(e.target.value)} 
-                required 
-                placeholder="Enter your email"
-              />
-            </div>
-            <div className="form-group">
-              <label>Password</label>
-              <input 
-                type="password" 
-                value={password} 
-                onChange={(e) => setPassword(e.target.value)} 
-                required 
-                placeholder="Enter your password"
-              />
-            </div>
-            <button type="submit" className="btn btn-primary login-btn">Sign In</button>
-          </form>
-          <div className="login-hint">
-            <p><strong>Demo Access:</strong></p>
-            <p>Admin: admin@fiodebengal.com</p>
-            <p>Buyer: buyer@example.com</p>
-          </div>
+      <div className="container login-container" style={{ display: 'flex', justifyContent: 'center', padding: '40px 0' }}>
+        <div className="login-box" style={{ maxWidth: '500px', width: '100%', padding: '0', background: 'transparent', boxShadow: 'none' }}>
+          {/* We assume the default flow ID is 'sign-up-or-in' which you will configure in Descope Console */}
+          <Descope
+            flowId="sign-up-or-in"
+            onSuccess={onSuccess}
+            onError={onError}
+            theme="light"
+          />
         </div>
       </div>
     </div>

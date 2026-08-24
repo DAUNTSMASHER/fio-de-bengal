@@ -31,6 +31,14 @@
 }
 
 @media (max-width: 768px) {
+  .product-section {
+    padding: 48px 0;
+  }
+  
+  .section-title {
+    font-size: 2rem;
+  }
+
   .product-grid {
     grid-template-columns: 1fr;
   }

@@ -1,5 +1,6 @@
 import React from 'react';
-import { Routes, Route, useLocation } from 'react-router-dom';
+import { Routes, Route, useLocation, Navigate } from 'react-router-dom';
+import { SignIn, SignUp } from '@clerk/clerk-react';
 import Navbar from './components/Navbar';
 import WhatsAppButton from './components/WhatsAppButton';
 import Footer from './components/Footer';
@@ -8,15 +9,16 @@ import ProductsPage from './pages/ProductsPage';
 import ProductPage from './pages/ProductPage';
 import CartPage from './pages/CartPage';
 import CheckoutPage from './pages/CheckoutPage';
-import LoginPage from './pages/LoginPage';
 import AdminPanel from './pages/AdminPanel';
 import BuyerPanel from './pages/BuyerPanel';
 import TrackingPage from './pages/TrackingPage';
+import VerifyPhone from './pages/VerifyPhone';
+import RequirePhoneVerification from './components/RequirePhoneVerification';
 import './App.css';
 
 function App() {
   const location = useLocation();
-  const isDashboard = location.pathname.startsWith('/admin') || location.pathname.startsWith('/dashboard');
+  const isDashboard = location.pathname.startsWith('/admin') || location.pathname.startsWith('/dashboard') || location.pathname.startsWith('/verify-phone');
 
   return (
     <div className="app-wrapper">
@@ -28,10 +30,25 @@ function App() {
           <Route path="/product/:id" element={<ProductPage />} />
           <Route path="/cart" element={<CartPage />} />
           <Route path="/checkout" element={<CheckoutPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/admin" element={<AdminPanel />} />
+          
+          {/* Clerk Auth Routes */}
+          <Route path="/login/*" element={<div style={{display:'flex', justifyContent:'center', padding:'40px'}}><SignIn routing="path" path="/login" /></div>} />
+          <Route path="/sign-up/*" element={<div style={{display:'flex', justifyContent:'center', padding:'40px'}}><SignUp routing="path" path="/sign-up" /></div>} />
+          <Route path="/verify-phone" element={<VerifyPhone />} />
+          
+          {/* Protected Routes */}
+          <Route path="/admin" element={
+            <RequirePhoneVerification>
+              <AdminPanel />
+            </RequirePhoneVerification>
+          } />
+          <Route path="/dashboard" element={
+            <RequirePhoneVerification>
+              <BuyerPanel />
+            </RequirePhoneVerification>
+          } />
+          
           <Route path="/tracking" element={<TrackingPage />} />
-          <Route path="/dashboard" element={<BuyerPanel />} />
         </Routes>
       </main>
       {!isDashboard && <Footer />}
