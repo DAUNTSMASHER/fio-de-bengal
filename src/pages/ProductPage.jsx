@@ -47,7 +47,7 @@ const ProductPage = () => {
     // Fetch inventory for specific product
     fetch(`/api/inventory?product_id=${id}&t=${new Date().getTime()}`)
       .then(res => res.json())
-      .then(data => setInventory(data || []))
+      .then(data => setInventory(Array.isArray(data) ? data : []))
       .catch(err => console.error("Error fetching inventory", err));
   }, [id]);
 

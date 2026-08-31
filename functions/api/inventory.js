@@ -4,11 +4,31 @@ export async function onRequestGet(context) {
     const url = new URL(request.url);
     const productId = url.searchParams.get('product_id');
 
-    let result;
-    if (productId) {
-      result = await env.DB.prepare("SELECT * FROM Inventory WHERE product_id = ?").bind(productId).all();
+    let result = { results: [] };
+    
+    if (env.DB) {
+      if (productId) {
+        result = await env.DB.prepare("SELECT * FROM Inventory WHERE product_id = ?").bind(productId).all();
+      } else {
+        result = await env.DB.prepare("SELECT * FROM Inventory").all();
+      }
     } else {
-      result = await env.DB.prepare("SELECT * FROM Inventory").all();
+      // Fallback inventory if D1 is not configured
+      const fallbackInventory = [
+        { id: 1, product_id: 1, base_size: '8x10', length: '6"', color: '#1', quantity: 5 },
+        { id: 2, product_id: 1, base_size: '8x10', length: '6"', color: '#1B', quantity: 8 },
+        { id: 3, product_id: 2, base_size: '7x9', length: '6"', color: '#2', quantity: 3 },
+        { id: 4, product_id: 3, base_size: '8x10', length: '6"', color: '#1B', quantity: 12 },
+        { id: 5, product_id: 4, base_size: '8x10', length: '6"', color: '#1', quantity: 4 },
+        { id: 6, product_id: 5, base_size: '8x10', length: '6"', color: '#3', quantity: 6 },
+        { id: 7, product_id: 6, base_size: '8x10', length: '6"', color: '#1B', quantity: 7 },
+      ];
+      
+      if (productId) {
+        result.results = fallbackInventory.filter(item => item.product_id === parseInt(productId));
+      } else {
+        result.results = fallbackInventory;
+      }
     }
 
     return new Response(JSON.stringify(result.results), {
