@@ -31,6 +31,9 @@ const ProductPage = () => {
     fetch(`/api/products?t=${new Date().getTime()}`)
       .then(res => res.json())
       .then(data => {
+        if (!Array.isArray(data)) {
+          throw new Error(data.error || "Invalid response format from server");
+        }
         const foundProduct = data.find(p => p.id === parseInt(id));
         if (foundProduct) {
           setProduct(foundProduct);
