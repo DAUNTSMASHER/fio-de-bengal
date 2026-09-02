@@ -23,25 +23,24 @@ const BlogPostPage = () => {
 
   return (
     <div className="page-layout texture-bengal-wave" style={{padding: 0}}>
-      {/* Full width hero image wrapper */}
-      <div className="blog-post-hero-full" style={{ backgroundImage: `url("${post.image}")` }}>
-        <div className="hero-overlay">
-          <div className="container hero-content">
-            <Link to="/blog" className="back-to-blog-light">&larr; Back to Journal</Link>
-            <div className="blog-post-meta-light">
-              <span>{new Date(post.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</span>
-              <span>&bull;</span>
-              <span>{post.readTime}</span>
-            </div>
-            <h1 className="blog-post-title-light">{post.title}</h1>
-            <p className="blog-author-light">By {post.author}</p>
+      {/* Solid dark hero banner instead of stretched image */}
+      <div className="blog-post-hero-banner">
+        <div className="container hero-content">
+          <Link to="/blog" className="back-to-blog-light">&larr; Back to Journal</Link>
+          <div className="blog-post-meta-light">
+            <span>{new Date(post.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</span>
+            <span>&bull;</span>
+            <span>{post.readTime}</span>
           </div>
+          <h1 className="blog-post-title-light">{post.title}</h1>
+          <p className="blog-author-light">By {post.author}</p>
         </div>
       </div>
 
       <div className="container blog-two-column-layout">
         {/* Left Column: Article Content */}
         <div className="blog-main-content">
+          <img src={post.image} alt={post.title} className="blog-post-featured-image" />
           <div 
             className="blog-post-content"
             dangerouslySetInnerHTML={{ __html: post.content }}
