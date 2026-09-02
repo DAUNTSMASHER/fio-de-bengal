@@ -8,7 +8,7 @@ export async function onRequestGet(context) {
     
     if (env.DB) {
       if (productId) {
-        result = await env.DB.prepare("SELECT * FROM Inventory WHERE product_id = ?").bind(productId).all();
+        result = await env.DB.prepare("SELECT * FROM Inventory WHERE product_id = ?").bind(parseInt(productId, 10)).all();
       } else {
         result = await env.DB.prepare("SELECT * FROM Inventory").all();
       }
