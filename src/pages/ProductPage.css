@@ -11,7 +11,7 @@
   grid-template-columns: 4fr 3fr;
   gap: 48px;
   background: white;
-  padding: 32px 40px;
+  padding: 56px 64px;
   border-radius: 12px;
   box-shadow: 0 16px 48px rgba(0,0,0,0.04);
   align-items: stretch;
@@ -41,12 +41,19 @@
   padding: 32px;
 }
 
+.product-info-panel {
+  padding-top: 16px;
+  display: flex;
+  flex-direction: column;
+}
+
 .product-title {
   font-family: 'Georgia', serif;
-  font-size: 36px;
-  margin-top: 16px;
+  font-size: 38px;
+  margin-top: 0;
   margin-bottom: 16px;
   color: var(--text-primary);
+  line-height: 1.2;
 }
 
 .product-price {
