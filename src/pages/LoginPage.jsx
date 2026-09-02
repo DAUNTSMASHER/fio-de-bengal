@@ -47,50 +47,52 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="page-layout texture-bengal-wave" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '80vh' }}>
-      <div className="login-card" style={{ background: 'var(--surface-card)', padding: '40px', borderRadius: '12px', boxShadow: '0 12px 24px rgba(0,0,0,0.06)', border: '1px solid var(--border-muted)', maxWidth: '400px', width: '100%' }}>
-        <div style={{ textAlign: 'center' }}>
-          <img src="/design_assets/Logo.png" alt="Fio de Bengal" style={{ height: '60px', marginBottom: '24px' }} />
-          <h1 style={{ fontFamily: 'Georgia, serif', fontSize: '2rem', color: 'var(--text-primary)', marginBottom: '8px' }}>Sign In</h1>
-          <p style={{ color: 'var(--text-secondary)', marginBottom: '32px' }}>Welcome back to Fio de Bengal.</p>
+    <div className="auth-page-wrapper texture-bengal-wave">
+      <div className="auth-card">
+        <div className="auth-header">
+          <img src="/design_assets/fio_generated_tiger_logo.png" alt="Fio de Bengal" className="auth-logo" />
+          <h1 className="auth-title">Sign In</h1>
+          <p className="auth-subtitle">Welcome back to Fio de Bengal. Access your exclusive wholesale dashboard.</p>
         </div>
 
-        {error && <div style={{ background: '#fee2e2', color: '#991b1b', padding: '12px', borderRadius: '6px', marginBottom: '20px', fontSize: '0.9rem' }}>{error}</div>}
+        {error && <div className="auth-error-msg">{error}</div>}
 
-        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-          <div className="form-group" style={{ margin: 0 }}>
-            <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Email Address</label>
+        <form className="auth-form" onSubmit={handleSubmit}>
+          <div className="auth-form-group">
+            <label className="auth-label">Email Address</label>
             <input 
               type="email" 
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="form-control"
-              style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid var(--border-muted)' }}
+              className="auth-input"
+              placeholder="Enter your email"
             />
           </div>
-          <div className="form-group" style={{ margin: 0 }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-              <label style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Password</label>
-              <Link to="/reset-password" style={{ fontSize: '0.85rem', color: 'var(--accent-gold)', textDecoration: 'none' }}>Forgot password?</Link>
+          
+          <div className="auth-form-group">
+            <div className="auth-label-wrapper">
+              <label className="auth-label">Password</label>
+              <Link to="/reset-password" className="auth-link">Forgot Password?</Link>
             </div>
             <input 
               type="password" 
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="form-control"
-              style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid var(--border-muted)' }}
+              className="auth-input"
+              placeholder="Enter your password"
             />
           </div>
-          <button type="submit" className="btn btn-primary" disabled={loading} style={{ width: '100%', padding: '14px', marginTop: '10px' }}>
-            {loading ? 'Signing in...' : 'Sign In'}
+          
+          <button type="submit" className="auth-submit-btn" disabled={loading}>
+            {loading ? 'Authenticating...' : 'Sign In'}
           </button>
         </form>
 
-        <div style={{ textAlign: 'center', marginTop: '24px', fontSize: '0.9rem' }}>
-          <span style={{ color: 'var(--text-secondary)' }}>Don't have an account? </span>
-          <Link to="/register" style={{ color: 'var(--accent-gold)', textDecoration: 'none', fontWeight: 'bold' }}>Create Account</Link>
+        <div className="auth-footer">
+          <span>Don't have an account? </span>
+          <Link to="/register" className="auth-link" style={{ fontWeight: '600' }}>Create Account</Link>
         </div>
       </div>
     </div>
