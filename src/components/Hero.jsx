@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import './Hero.css';
 
 const Hero = () => {
@@ -21,7 +22,9 @@ const Hero = () => {
             Discover our exclusive collection of high-quality, minimal-maintenance wigs designed for top-tier salons and retailers.
           </p>
           <div className="hero-actions">
-            <button className="btn-primary">Pedir Muestra / Solicitar Amostra</button>
+            <Link to="/products" className="btn-primary" style={{ display: 'inline-block', textDecoration: 'none', textAlign: 'center' }}>
+              Pedir Muestra / Solicitar Amostra
+            </Link>
           </div>
         </div>
       </div>
