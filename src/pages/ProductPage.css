@@ -42,7 +42,6 @@
 }
 
 .product-info-panel {
-  padding-top: 16px;
   display: flex;
   flex-direction: column;
 }
