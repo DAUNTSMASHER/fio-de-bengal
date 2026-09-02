@@ -4,3 +4,13 @@ Disallow: /admin
 Disallow: /dashboard
 
 Sitemap: https://www.fiodebengal.com/sitemap.xml
+
+# Explicitly allow AI Search Engines
+User-agent: GPTBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
