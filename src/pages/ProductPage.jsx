@@ -85,7 +85,7 @@ const ProductPage = () => {
 
   return (
     <div className="page-layout texture-bengal-wave">
-      <div className="container product-detail-container">
+      <div className="container product-detail-container" style={{ padding: '80px', gap: '64px' }}>
         <div className="product-image-gallery">
           <div className="main-image">
             <img src={product.image || '/design_assets/fio_main_logo.png'} alt={product.name} className="product-main-img" />
