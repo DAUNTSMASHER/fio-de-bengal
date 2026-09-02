@@ -12,6 +12,8 @@ import CheckoutPage from './pages/CheckoutPage';
 import AdminPanel from './pages/AdminPanel';
 import BuyerPanel from './pages/BuyerPanel';
 import TrackingPage from './pages/TrackingPage';
+import BlogPage from './pages/BlogPage';
+import BlogPostPage from './pages/BlogPostPage';
 import VerifyPhone from './pages/VerifyPhone';
 import RequirePhoneVerification from './components/RequirePhoneVerification';
 import './App.css';
@@ -30,6 +32,8 @@ function App() {
           <Route path="/product/:id" element={<ProductPage />} />
           <Route path="/cart" element={<CartPage />} />
           <Route path="/checkout" element={<CheckoutPage />} />
+          <Route path="/blog" element={<BlogPage />} />
+          <Route path="/blog/:slug" element={<BlogPostPage />} />
           
           {/* Clerk Auth Routes */}
           <Route path="/login/*" element={<div style={{display:'flex', justifyContent:'center', padding:'40px'}}><SignIn routing="path" path="/login" /></div>} />
