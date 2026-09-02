@@ -50,15 +50,23 @@
   font-family: 'Georgia', serif;
   font-size: 38px;
   margin-top: 0;
-  margin-bottom: 16px;
+  margin-bottom: 4px;
   color: var(--text-primary);
   line-height: 1.2;
+}
+
+.product-sku {
+  margin-top: 0;
+  margin-bottom: 12px;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
 }
 
 .product-price {
   font-size: 24px;
   font-weight: 600;
-  margin-bottom: 32px;
+  margin-top: 0;
+  margin-bottom: 16px;
 }
 
 .length-options {
@@ -91,8 +99,8 @@
 }
 
 .product-description {
-  margin-top: 32px;
-  padding-top: 32px;
+  margin-top: 16px;
+  padding-top: 16px;
   border-top: 1px solid var(--border-muted);
   color: var(--text-secondary);
 }
