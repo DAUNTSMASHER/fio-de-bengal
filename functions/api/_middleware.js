@@ -8,14 +8,11 @@ export async function onRequest(context) {
 
   const url = new URL(request.url);
 
-  // We skip authentication for public routes like login, register, and reset
-  if (url.pathname.startsWith('/api/auth/')) {
-    return next();
-  }
-  
-  // Skip public product fetching
-  if (url.pathname === '/api/products' && request.method === 'GET') {
-    return next();
+  // Allow authentication endpoints, public products GET, and public inventory GET
+  if (url.pathname.startsWith('/api/auth/') || 
+     (url.pathname === '/api/products' && request.method === 'GET') ||
+     (url.pathname === '/api/inventory' && request.method === 'GET')) {
+    return context.next();
   }
 
   try {
