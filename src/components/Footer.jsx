@@ -19,13 +19,13 @@ const Footer = () => {
         <div className="footer-links">
           <div className="link-group">
             <h4>Company</h4>
-            <a href="#about">About Us</a>
-            <a href="#contact">Contact</a>
+            <Link to="/about">About Us</Link>
+            <Link to="/contact">Contact</Link>
           </div>
           <div className="link-group">
             <h4>Support</h4>
-            <a href="#faq">FAQ</a>
-            <a href="#shipping">Shipping Policy</a>
+            <Link to="/faq">FAQ</Link>
+            <Link to="/shipping">Shipping Policy</Link>
           </div>
           <div className="link-group">
             <h4>Account</h4>

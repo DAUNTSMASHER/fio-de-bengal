@@ -17,6 +17,10 @@ import NotFoundPage from './pages/NotFoundPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import ResetPasswordPage from './pages/ResetPasswordPage';
+import AboutPage from './pages/AboutPage';
+import ContactPage from './pages/ContactPage';
+import FAQPage from './pages/FAQPage';
+import ShippingPage from './pages/ShippingPage';
 import { useAuth } from './context/AuthContext';
 import './App.css';
 
@@ -48,6 +52,12 @@ function App() {
           <Route path="/blog" element={<BlogPage />} />
           <Route path="/blog/:slug" element={<BlogPostPage />} />
           <Route path="/tracking" element={<TrackingPage />} />
+          
+          {/* Static Pages */}
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/contact" element={<ContactPage />} />
+          <Route path="/faq" element={<FAQPage />} />
+          <Route path="/shipping" element={<ShippingPage />} />
           
           {/* Custom Auth Routes */}
           <Route path="/login" element={<LoginPage />} />
