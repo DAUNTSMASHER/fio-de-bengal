@@ -22,27 +22,54 @@ const BlogPostPage = () => {
   }
 
   return (
-    <div className="page-layout texture-bengal-wave">
-      <div className="blog-post-container">
-        <Link to="/blog" className="back-to-blog">&larr; Back to Journal</Link>
-        
-        <div className="blog-post-header">
-          <div className="blog-post-meta">
-            <span>{new Date(post.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</span>
-            <span>&bull;</span>
-            <span>{post.readTime}</span>
-            <span>&bull;</span>
-            <span>By {post.author}</span>
+    <div className="page-layout texture-bengal-wave" style={{padding: 0}}>
+      {/* Full width hero image wrapper */}
+      <div className="blog-post-hero-full" style={{ backgroundImage: `url("${post.image}")` }}>
+        <div className="hero-overlay">
+          <div className="container hero-content">
+            <Link to="/blog" className="back-to-blog-light">&larr; Back to Journal</Link>
+            <div className="blog-post-meta-light">
+              <span>{new Date(post.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</span>
+              <span>&bull;</span>
+              <span>{post.readTime}</span>
+            </div>
+            <h1 className="blog-post-title-light">{post.title}</h1>
+            <p className="blog-author-light">By {post.author}</p>
           </div>
-          <h1 className="blog-post-title">{post.title}</h1>
         </div>
-        
-        <img src={post.image} alt={post.title} className="blog-post-hero-image" />
-        
-        <div 
-          className="blog-post-content"
-          dangerouslySetInnerHTML={{ __html: post.content }}
-        />
+      </div>
+
+      <div className="container blog-two-column-layout">
+        {/* Left Column: Article Content */}
+        <div className="blog-main-content">
+          <div 
+            className="blog-post-content"
+            dangerouslySetInnerHTML={{ __html: post.content }}
+          />
+        </div>
+
+        {/* Right Column: Sidebar */}
+        <aside className="blog-sidebar">
+          <div className="sidebar-widget about-widget">
+            <h3>About FIO de Bengal</h3>
+            <p>We are the industry leader in supplying premium wholesale hair systems and extensions to high-end salons worldwide.</p>
+            <Link to="/products" className="btn btn-primary w-100" style={{marginTop: '15px'}}>Shop Wholesale</Link>
+          </div>
+          
+          <div className="sidebar-widget">
+            <h3>Recent Articles</h3>
+            <ul className="recent-articles-list">
+              {blogPosts.filter(p => p.id !== post.id).slice(0, 3).map(recent => (
+                <li key={recent.id}>
+                  <Link to={`/blog/${recent.slug}`} className="recent-article-link">
+                    <span className="recent-article-title">{recent.title}</span>
+                    <span className="recent-article-date">{new Date(recent.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </aside>
       </div>
     </div>
   );
