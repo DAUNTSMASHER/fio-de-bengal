@@ -43,8 +43,10 @@
 
 .product-title {
   font-family: 'Georgia', serif;
-  font-size: 32px;
+  font-size: 36px;
+  margin-top: 16px;
   margin-bottom: 16px;
+  color: var(--text-primary);
 }
 
 .product-price {
