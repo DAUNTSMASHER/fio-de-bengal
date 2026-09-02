@@ -1,29 +1,55 @@
-export async function onRequestPost(context) {
+import { verifyPassword, generateSecureToken } from './crypto';
+
+export async function onRequest(context) {
+  const { request, env } = context;
+
+  if (request.method !== 'POST') {
+    return new Response('Method not allowed', { status: 405 });
+  }
+
   try {
-    const { request, env } = context;
     const { email, password } = await request.json();
 
-    // In a real application, you would query Cloudflare D1 here:
-    // const { results } = await env.DB.prepare("SELECT * FROM Users WHERE email = ?").bind(email).all();
+    if (!email || !password) {
+      return new Response(JSON.stringify({ error: 'Email and password required' }), { status: 400 });
+    }
+
+    // Fetch user from D1
+    const { results } = await env.DB.prepare(
+      `SELECT * FROM users WHERE email = ?`
+    ).bind(email.toLowerCase()).all();
+
+    const user = results[0];
+
+    if (!user) {
+      return new Response(JSON.stringify({ error: 'Invalid email or password' }), { status: 401 });
+    }
+
+    // Verify Password
+    const isValid = await verifyPassword(password, user.password_hash, user.salt);
+    if (!isValid) {
+      return new Response(JSON.stringify({ error: 'Invalid email or password' }), { status: 401 });
+    }
+
+    // Generate Session
+    const sessionToken = generateSecureToken(32);
+    const expiresAt = Date.now() + 7 * 24 * 60 * 60 * 1000; // 7 days
     
-    // MOCK RESPONSE for now
-    if (email === 'admin@fiodebengal.com') {
-      return new Response(JSON.stringify({
-        token: 'mock-jwt-admin-token-xyz',
-        user: { id: 1, name: 'Admin User', email, role: 'admin' }
-      }), { status: 200, headers: { 'Content-Type': 'application/json' } });
-    }
+    await env.DB.prepare(
+      `INSERT INTO sessions (id, user_id, expires_at) VALUES (?, ?, ?)`
+    ).bind(sessionToken, user.id, expiresAt).run();
 
-    if (email === 'buyer@example.com') {
-      return new Response(JSON.stringify({
-        token: 'mock-jwt-buyer-token-abc',
-        user: { id: 2, name: 'Valued Customer', email, role: 'buyer' }
-      }), { status: 200, headers: { 'Content-Type': 'application/json' } });
-    }
+    return new Response(JSON.stringify({ 
+      success: true, 
+      token: sessionToken,
+      user: { id: user.id, email: user.email, role: user.role }
+    }), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' }
+    });
 
-    return new Response(JSON.stringify({ error: 'Invalid credentials' }), { status: 401 });
-
-  } catch (err) {
-    return new Response(JSON.stringify({ error: err.message }), { status: 500 });
+  } catch (error) {
+    console.error('Login error:', error);
+    return new Response(JSON.stringify({ error: 'Internal server error' }), { status: 500 });
   }
 }

@@ -3,9 +3,10 @@ import { useAuth } from '../context/AuthContext';
 import { useNavigate, Navigate, Link } from 'react-router-dom';
 import './LoginPage.css';
 
-const LoginPage = () => {
+const RegisterPage = () => {
   const { user, isLoaded, setSession } = useAuth();
   const navigate = useNavigate();
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -25,16 +26,16 @@ const LoginPage = () => {
     setLoading(true);
 
     try {
-      const res = await fetch('/api/auth/login', {
+      const res = await fetch('/api/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
+        body: JSON.stringify({ name, email, password })
       });
 
       const data = await res.json();
 
       if (!res.ok) {
-        throw new Error(data.error || 'Login failed');
+        throw new Error(data.error || 'Registration failed');
       }
 
       setSession(data.token, data.user);
@@ -51,13 +52,24 @@ const LoginPage = () => {
       <div className="login-card" style={{ background: 'var(--surface-card)', padding: '40px', borderRadius: '12px', boxShadow: '0 12px 24px rgba(0,0,0,0.06)', border: '1px solid var(--border-muted)', maxWidth: '400px', width: '100%' }}>
         <div style={{ textAlign: 'center' }}>
           <img src="/design_assets/Logo.png" alt="Fio de Bengal" style={{ height: '60px', marginBottom: '24px' }} />
-          <h1 style={{ fontFamily: 'Georgia, serif', fontSize: '2rem', color: 'var(--text-primary)', marginBottom: '8px' }}>Sign In</h1>
-          <p style={{ color: 'var(--text-secondary)', marginBottom: '32px' }}>Welcome back to Fio de Bengal.</p>
+          <h1 style={{ fontFamily: 'Georgia, serif', fontSize: '2rem', color: 'var(--text-primary)', marginBottom: '8px' }}>Create Account</h1>
+          <p style={{ color: 'var(--text-secondary)', marginBottom: '32px' }}>Join Fio de Bengal for exclusive wholesale access.</p>
         </div>
 
         {error && <div style={{ background: '#fee2e2', color: '#991b1b', padding: '12px', borderRadius: '6px', marginBottom: '20px', fontSize: '0.9rem' }}>{error}</div>}
 
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+          <div className="form-group" style={{ margin: 0 }}>
+            <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Full Name</label>
+            <input 
+              type="text" 
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+              className="form-control"
+              style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid var(--border-muted)' }}
+            />
+          </div>
           <div className="form-group" style={{ margin: 0 }}>
             <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Email Address</label>
             <input 
@@ -70,31 +82,29 @@ const LoginPage = () => {
             />
           </div>
           <div className="form-group" style={{ margin: 0 }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-              <label style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Password</label>
-              <Link to="/reset-password" style={{ fontSize: '0.85rem', color: 'var(--accent-gold)', textDecoration: 'none' }}>Forgot password?</Link>
-            </div>
+            <label style={{ display: 'block', marginBottom: '8px', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Password</label>
             <input 
               type="password" 
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
+              minLength="6"
               className="form-control"
               style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid var(--border-muted)' }}
             />
           </div>
           <button type="submit" className="btn btn-primary" disabled={loading} style={{ width: '100%', padding: '14px', marginTop: '10px' }}>
-            {loading ? 'Signing in...' : 'Sign In'}
+            {loading ? 'Creating Account...' : 'Create Account'}
           </button>
         </form>
 
         <div style={{ textAlign: 'center', marginTop: '24px', fontSize: '0.9rem' }}>
-          <span style={{ color: 'var(--text-secondary)' }}>Don't have an account? </span>
-          <Link to="/register" style={{ color: 'var(--accent-gold)', textDecoration: 'none', fontWeight: 'bold' }}>Create Account</Link>
+          <span style={{ color: 'var(--text-secondary)' }}>Already have an account? </span>
+          <Link to="/login" style={{ color: 'var(--accent-gold)', textDecoration: 'none', fontWeight: 'bold' }}>Sign In</Link>
         </div>
       </div>
     </div>
   );
 };
 
-export default LoginPage;
+export default RegisterPage;

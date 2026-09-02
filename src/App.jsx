@@ -15,6 +15,8 @@ import BlogPage from './pages/BlogPage';
 import BlogPostPage from './pages/BlogPostPage';
 import NotFoundPage from './pages/NotFoundPage';
 import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
+import ResetPasswordPage from './pages/ResetPasswordPage';
 import { useAuth } from './context/AuthContext';
 import './App.css';
 
@@ -47,8 +49,10 @@ function App() {
           <Route path="/blog/:slug" element={<BlogPostPage />} />
           <Route path="/tracking" element={<TrackingPage />} />
           
-          {/* Manual Google Auth Route */}
+          {/* Custom Auth Routes */}
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/reset-password" element={<ResetPasswordPage />} />
           
           {/* Protected Routes */}
           <Route path="/admin" element={

@@ -1,5 +1,4 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { jwtDecode } from 'jwt-decode';
 
 const AuthContext = createContext();
 
@@ -7,74 +6,55 @@ export const useAuth = () => {
   return useContext(AuthContext);
 };
 
-// Hardcoded Admins (Replace with real admin emails)
-const ADMIN_EMAILS = [
-  'admin@fiodebengal.com',
-  'fiodebengal@gmail.com',
-];
-
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
     // Check for existing session in localStorage
-    const token = localStorage.getItem('google_jwt_token');
-    if (token) {
+    const token = localStorage.getItem('fio_session_token');
+    const storedUser = localStorage.getItem('fio_user_data');
+    
+    if (token && storedUser) {
       try {
-        const decoded = jwtDecode(token);
-        
-        // Check if token is expired
-        const isExpired = decoded.exp * 1000 < Date.now();
-        if (isExpired) {
-          localStorage.removeItem('google_jwt_token');
-          setUser(null);
-        } else {
-          // Determine Role
-          const role = ADMIN_EMAILS.includes(decoded.email) ? 'admin' : 'buyer';
-          
-          setUser({
-            id: decoded.sub,
-            name: decoded.name || 'User',
-            email: decoded.email,
-            role: role,
-            picture: decoded.picture,
-            token: token // Keep token for API calls
-          });
-        }
+        const parsedUser = JSON.parse(storedUser);
+        setUser({ ...parsedUser, token });
       } catch (err) {
-        console.error("Invalid token in localStorage", err);
-        localStorage.removeItem('google_jwt_token');
+        console.error("Invalid session data in localStorage", err);
+        localStorage.removeItem('fio_session_token');
+        localStorage.removeItem('fio_user_data');
       }
     }
     setIsLoaded(true);
   }, []);
 
-  const login = (credentialResponse) => {
-    const token = credentialResponse.credential;
-    localStorage.setItem('google_jwt_token', token);
-    
-    const decoded = jwtDecode(token);
-    const role = ADMIN_EMAILS.includes(decoded.email) ? 'admin' : 'buyer';
-    
-    setUser({
-      id: decoded.sub,
-      name: decoded.name || 'User',
-      email: decoded.email,
-      role: role,
-      picture: decoded.picture,
-      token: token
-    });
+  const setSession = (token, userData) => {
+    localStorage.setItem('fio_session_token', token);
+    localStorage.setItem('fio_user_data', JSON.stringify(userData));
+    setUser({ ...userData, token });
   };
 
-  const logout = () => {
-    localStorage.removeItem('google_jwt_token');
+  const logout = async () => {
+    // Optionally call backend to destroy session token in D1
+    if (user?.token) {
+      try {
+        await fetch('/api/auth/logout', {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${user.token}` }
+        });
+      } catch (err) {
+        console.error("Logout API failed", err);
+      }
+    }
+
+    localStorage.removeItem('fio_session_token');
+    localStorage.removeItem('fio_user_data');
     setUser(null);
     window.location.href = '/';
   };
 
   return (
-    <AuthContext.Provider value={{ user, isLoaded, login, logout }}>
+    <AuthContext.Provider value={{ user, isLoaded, setSession, logout }}>
       {children}
     </AuthContext.Provider>
   );
