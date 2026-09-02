@@ -1,4 +1,7 @@
-import { createClerkClient } from '@clerk/backend';
+const ADMIN_EMAILS = [
+  'admin@fiodebengal.com',
+  'fiodebengal@gmail.com',
+];
 
 export async function onRequest(context) {
   const { request, env, next } = context;
@@ -14,48 +17,40 @@ export async function onRequest(context) {
     return next();
   }
 
-  const clerk = createClerkClient({ secretKey: env.CLERK_SECRET_KEY, publishableKey: env.VITE_CLERK_PUBLISHABLE_KEY });
-
   try {
     const authHeader = request.headers.get('Authorization');
-    if (!authHeader) {
-      throw new Error('No Authorization header');
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      throw new Error('No valid Authorization header');
     }
 
     const token = authHeader.replace('Bearer ', '');
-    const requestState = await clerk.authenticateRequest(request, {
-      jwtKey: env.CLERK_JWT_KEY,
-      authorizedParties: [url.origin],
-    });
-
-    if (!requestState.isSignedIn) {
-      return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401, headers: { 'Content-Type': 'application/json' } });
+    
+    // Securely verify the Google JWT using Google's tokeninfo endpoint
+    // This works perfectly in Cloudflare Workers without needing Node.js crypto libraries
+    const googleVerifyResponse = await fetch(`https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=${token}`);
+    
+    if (!googleVerifyResponse.ok) {
+       throw new Error('Invalid or expired Google Token');
     }
-
-    // Fetch the user to check metadata
-    const user = await clerk.users.getUser(requestState.toAuth().userId);
-
-    // Verify phone verification requirement unless hitting the SMS endpoints
-    const isSmsRoute = url.pathname.startsWith('/api/sms/');
-    if (!isSmsRoute) {
-      const isPhoneVerified = user.publicMetadata?.phoneVerified === true;
-      if (!isPhoneVerified) {
-        return new Response(JSON.stringify({ error: 'Phone verification required' }), {
-          status: 403,
-          headers: { 'Content-Type': 'application/json' },
-        });
-      }
-    }
+    
+    const decodedToken = await googleVerifyResponse.json();
+    
+    // Determine user role
+    const role = ADMIN_EMAILS.includes(decodedToken.email) ? 'admin' : 'buyer';
 
     // Pass user data to the request for downstream handlers
     context.data = context.data || {};
-    context.data.auth = requestState.toAuth();
-    context.data.user = user;
+    context.data.user = {
+      id: decodedToken.sub,
+      email: decodedToken.email,
+      name: decodedToken.name,
+      role: role
+    };
 
     return next();
   } catch (error) {
-    console.error('Clerk authentication failed:', error);
-    return new Response(JSON.stringify({ error: 'Invalid or expired token', details: error.message }), {
+    console.error('Google JWT authentication failed:', error);
+    return new Response(JSON.stringify({ error: 'Unauthorized', details: error.message }), {
       status: 401,
       headers: { 'Content-Type': 'application/json' },
     });

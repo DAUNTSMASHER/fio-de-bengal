@@ -1,6 +1,5 @@
 import React from 'react';
 import { Routes, Route, useLocation, Navigate } from 'react-router-dom';
-import { SignIn, SignUp } from '@clerk/clerk-react';
 import Navbar from './components/Navbar';
 import WhatsAppButton from './components/WhatsAppButton';
 import Footer from './components/Footer';
@@ -15,13 +14,24 @@ import TrackingPage from './pages/TrackingPage';
 import BlogPage from './pages/BlogPage';
 import BlogPostPage from './pages/BlogPostPage';
 import NotFoundPage from './pages/NotFoundPage';
-import VerifyPhone from './pages/VerifyPhone';
-import RequirePhoneVerification from './components/RequirePhoneVerification';
+import LoginPage from './pages/LoginPage';
+import { useAuth } from './context/AuthContext';
 import './App.css';
+
+// Simple Protected Route wrapper
+const ProtectedRoute = ({ children, requiredRole }) => {
+  const { user, isLoaded } = useAuth();
+  
+  if (!isLoaded) return <div style={{padding: '50px', textAlign: 'center'}}>Loading...</div>;
+  if (!user) return <Navigate to="/login" replace />;
+  if (requiredRole && user.role !== requiredRole) return <Navigate to="/dashboard" replace />;
+  
+  return children;
+};
 
 function App() {
   const location = useLocation();
-  const isDashboard = location.pathname.startsWith('/admin') || location.pathname.startsWith('/dashboard') || location.pathname.startsWith('/verify-phone');
+  const isDashboard = location.pathname.startsWith('/admin') || location.pathname.startsWith('/dashboard') || location.pathname.startsWith('/login');
 
   return (
     <div className="app-wrapper">
@@ -35,25 +45,23 @@ function App() {
           <Route path="/checkout" element={<CheckoutPage />} />
           <Route path="/blog" element={<BlogPage />} />
           <Route path="/blog/:slug" element={<BlogPostPage />} />
+          <Route path="/tracking" element={<TrackingPage />} />
           
-          {/* Clerk Auth Routes */}
-          <Route path="/login/*" element={<div style={{display:'flex', justifyContent:'center', padding:'40px'}}><SignIn routing="path" path="/login" /></div>} />
-          <Route path="/sign-up/*" element={<div style={{display:'flex', justifyContent:'center', padding:'40px'}}><SignUp routing="path" path="/sign-up" /></div>} />
-          <Route path="/verify-phone" element={<VerifyPhone />} />
+          {/* Manual Google Auth Route */}
+          <Route path="/login" element={<LoginPage />} />
           
           {/* Protected Routes */}
           <Route path="/admin" element={
-            <RequirePhoneVerification>
+            <ProtectedRoute requiredRole="admin">
               <AdminPanel />
-            </RequirePhoneVerification>
-          } />
-          <Route path="/dashboard" element={
-            <RequirePhoneVerification>
-              <BuyerPanel />
-            </RequirePhoneVerification>
+            </ProtectedRoute>
           } />
           
-          <Route path="/tracking" element={<TrackingPage />} />
+          <Route path="/dashboard" element={
+            <ProtectedRoute>
+              <BuyerPanel />
+            </ProtectedRoute>
+          } />
           
           {/* 404 Catch-All Route */}
           <Route path="*" element={<NotFoundPage />} />

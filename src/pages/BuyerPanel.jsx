@@ -22,7 +22,9 @@ const BuyerPanel = () => {
 
   const fetchInquiries = async () => {
     try {
-      const res = await fetch(`/api/inquiries?email=${encodeURIComponent(user.email)}`);
+      const res = await fetch(`/api/inquiries?email=${encodeURIComponent(user.email)}`, {
+        headers: { 'Authorization': `Bearer ${user.token}` }
+      });
       const data = await res.json();
       setInquiries(data);
     } catch (err) {
