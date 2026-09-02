@@ -17,8 +17,8 @@ const ContactPage = () => {
           
           <div style={{ background: 'rgba(255,255,255,0.03)', padding: '24px', borderRadius: '8px', border: '1px solid var(--border-muted)' }}>
             <h3 style={{ color: 'var(--text-primary)', marginBottom: '16px' }}>Get in Touch</h3>
-            <p style={{ marginBottom: '8px' }}><strong>Email:</strong> support@fiodebengal.com</p>
-            <p style={{ marginBottom: '8px' }}><strong>WhatsApp:</strong> +1 (555) 123-4567</p>
+            <p style={{ marginBottom: '8px' }}><strong>Email:</strong> info@fiodebengal.com</p>
+            <p style={{ marginBottom: '8px' }}><strong>WhatsApp:</strong> +44 7454 735807</p>
             <p style={{ marginBottom: '8px' }}><strong>Business Hours:</strong> Monday - Friday, 9:00 AM - 6:00 PM (EST)</p>
           </div>
         </div>
