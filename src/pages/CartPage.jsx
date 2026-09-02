@@ -15,7 +15,7 @@ const CartPage = () => {
   const [submitting, setSubmitting] = useState(false);
 
   const handleOpenModal = () => {
-    if (!user) return alert("You must be logged in to submit a quotation!");
+    if (!user) return alert("You must be logged in to checkout!");
     setShowModal(true);
   };
 
@@ -51,11 +51,11 @@ const CartPage = () => {
           inquiry_id: inquiryId,
           sender_role: 'buyer',
           sender_name: user.name,
-          message: message || "I would like to negotiate this bulk order."
+          message: message || "New order placed."
         })
       });
 
-      alert("Bulk Quotation submitted successfully! Admin will review your offers.");
+      alert("Order placed successfully! We will process it shortly.");
       clearCart();
       setShowModal(false);
       navigate('/dashboard'); 
@@ -69,11 +69,11 @@ const CartPage = () => {
   return (
     <div className="page-layout texture-bengal-wave">
       <div className="container cart-container">
-        <h1 className="page-title">Your Wholesale Inquiry Cart</h1>
+        <h1 className="page-title">Your Cart</h1>
         
         {cart.length === 0 ? (
           <div className="empty-cart">
-            <p>Your inquiry cart is currently empty.</p>
+            <p>Your cart is currently empty.</p>
             <Link to="/products" className="btn btn-primary">Browse Models</Link>
           </div>
         ) : (
@@ -88,7 +88,7 @@ const CartPage = () => {
                       <span><strong>Length:</strong> {item.options.length}</span>
                       <span><strong>Color:</strong> {item.options.color}</span>
                     </div>
-                    <p className="item-price" style={{margin: 0, fontWeight: '600', color: 'var(--accent-gold)'}}>Your Offer: ${item.price.toFixed(2)} / ea</p>
+                    <p className="item-price" style={{margin: 0, fontWeight: '600', color: 'var(--accent-gold)'}}>Price: ${item.price.toFixed(2)} / ea</p>
                   </div>
                   <div className="item-actions" style={{display: 'flex', alignItems: 'center', gap: '20px'}}>
                     <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
@@ -110,17 +110,17 @@ const CartPage = () => {
               ))}
             </div>
             <div className="cart-summary" style={{background: 'white', padding: '40px', borderRadius: '12px', border: '1px solid var(--border-muted)', height: 'fit-content'}}>
-              <h3 style={{borderBottom: '2px solid var(--accent-gold)', paddingBottom: '10px', marginBottom: '20px'}}>Quotation Summary</h3>
+              <h3 style={{borderBottom: '2px solid var(--accent-gold)', paddingBottom: '10px', marginBottom: '20px'}}>Order Summary</h3>
               <div className="summary-row" style={{display: 'flex', justifyContent: 'space-between', marginBottom: '15px'}}>
-                <span>Total Pieces</span>
+                <span>Total Items</span>
                 <strong>{cart.reduce((acc, i) => acc + i.quantity, 0)} pcs</strong>
               </div>
               <div className="summary-row total" style={{display: 'flex', justifyContent: 'space-between', marginBottom: '25px', fontSize: '1.2rem', fontWeight: 'bold'}}>
-                <span>Total Offer</span>
+                <span>Total Amount</span>
                 <span>${getCartTotal().toFixed(2)}</span>
               </div>
               <button className="btn btn-primary checkout-btn w-100" onClick={handleOpenModal} style={{width: '100%'}}>
-                Submit Bulk Quotation
+                Proceed to Checkout
               </button>
             </div>
           </div>
@@ -130,14 +130,14 @@ const CartPage = () => {
       {showModal && (
         <div className="modal-overlay">
           <div className="modal-content" style={{ maxWidth: '500px' }}>
-            <h2>Submit Bulk Inquiry</h2>
-            <p>You are submitting an inquiry for <strong>{cart.reduce((acc, i) => acc + i.quantity, 0)} items</strong> with a total offered value of <strong>${getCartTotal().toFixed(2)}</strong>.</p>
+            <h2>Confirm Checkout</h2>
+            <p>You are placing an order for <strong>{cart.reduce((acc, i) => acc + i.quantity, 0)} items</strong> with a total value of <strong>${getCartTotal().toFixed(2)}</strong>.</p>
             <div className="form-group" style={{marginTop: '20px'}}>
-              <label>Message (Optional)</label>
+              <label>Order Notes (Optional)</label>
               <textarea 
                 rows="4" 
                 className="form-control" 
-                placeholder="Include any additional requirements or negotiation notes..."
+                placeholder="Include any order notes or special instructions..."
                 value={message}
                 onChange={e => setMessage(e.target.value)}
               ></textarea>
@@ -145,7 +145,7 @@ const CartPage = () => {
             <div className="modal-actions" style={{display: 'flex', gap: '10px', marginTop: '20px'}}>
               <button className="btn btn-outline" onClick={() => setShowModal(false)} disabled={submitting}>Cancel</button>
               <button className="btn btn-primary" onClick={submitBulkInquiry} disabled={submitting}>
-                {submitting ? 'Sending...' : 'Submit Inquiry'}
+                {submitting ? 'Processing...' : 'Place Order'}
               </button>
             </div>
           </div>

@@ -22,7 +22,6 @@ const ProductPage = () => {
   const [selectedColor, setSelectedColor] = useState('');
   const [selectedLength, setSelectedLength] = useState('');
   const [quantity, setQuantity] = useState(1);
-  const [offeredPrice, setOfferedPrice] = useState('');
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -60,13 +59,13 @@ const ProductPage = () => {
   const uniqueLengths = [...new Set(inventory.map(i => i.length))];
 
   const handleAddToCart = () => {
-    if (!user) return alert("You must be logged in to build a wholesale quotation.");
-    if (!selectedBase || !selectedColor || !selectedLength || !quantity || !offeredPrice) {
-      return alert("Please fill out all quotation fields before proceeding.");
+    if (!user) return alert("You must be logged in to add items to your cart.");
+    if (!selectedBase || !selectedColor || !selectedLength || !quantity) {
+      return alert("Please select all options before proceeding.");
     }
     
     addToCart(
-      { id: product.id, name: product.name, price: parseFloat(offeredPrice) }, 
+      { id: product.id, name: product.name, price: parseFloat(product.price) }, 
       parseInt(quantity), 
       {
         modelVariant: modelVariant,
@@ -76,7 +75,7 @@ const ProductPage = () => {
       }
     );
     
-    alert(`Added ${quantity}x ${product.name} to your Wholesale Cart!`);
+    alert(`Added ${quantity}x ${product.name} to your Cart!`);
     navigate('/cart');
   };
 
@@ -102,10 +101,10 @@ const ProductPage = () => {
           </div>
           
           <div className="quotation-form-card">
-            <h3>Build Wholesale Quotation</h3>
+            <h3>Purchase Options</h3>
             {!user ? (
               <div className="login-warning">
-                <p>You must be logged in to build and submit a wholesale quotation.</p>
+                <p>You must be logged in to add items to your cart.</p>
                 <button className="btn btn-primary" onClick={() => navigate('/login')} style={{marginTop:'15px'}}>Login or Register</button>
               </div>
             ) : (
@@ -140,13 +139,9 @@ const ProductPage = () => {
                     <label>Quantity</label>
                     <input type="number" min="1" value={quantity} onChange={e => setQuantity(e.target.value)} className="form-control" />
                   </div>
-                  <div className="form-group" style={{ flex: 1 }}>
-                    <label>Your Offer Price ($)</label>
-                    <input type="number" min="1" step="0.01" placeholder="e.g. 110.00" value={offeredPrice} onChange={e => setOfferedPrice(e.target.value)} className="form-control" />
-                  </div>
                 </div>
                 <button className="btn btn-primary w-100" onClick={handleAddToCart} style={{marginTop: '10px'}}>
-                  Add to Wholesale Cart
+                  Add to Cart
                 </button>
               </div>
             )}

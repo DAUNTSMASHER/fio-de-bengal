@@ -261,25 +261,30 @@ const AdminPanel = () => {
                             <td>{inq.buyer_email}</td>
                             <td>
                               <strong>{inq.product_name}</strong>
-                              <br/>
-                              <span style={{fontSize: '0.8rem', color: 'var(--text-secondary)'}}>
-                                {inq.base} | {inq.color} | {inq.length} {inq.model_variant ? `| Var: ${inq.model_variant}` : ''}
-                              </span>
-                            </td>
-                            <td>{inq.quantity}</td>
-                            <td>${Number(inq.offered_price).toFixed(2)}</td>
-                            <td><span className={`status-badge ${inq.status === 'Completed' ? 'delivered' : 'pending'}`}>{inq.status}</span></td>
-                            <td>
-                              <button className="btn btn-primary" style={{ padding: '6px 12px', fontSize: '0.85rem' }} onClick={() => setActiveInquiry(inq)}>
-                                Open Chat
-                              </button>
-                            </td>
-                          </tr>
-                        ))
-                      )}
+                      {inquiries.map(inq => (
+                        <tr key={inq.id}>
+                          <td>{inq.buyer_email}</td>
+                          <td>
+                            <strong>{inq.product_name}</strong>
+                            <br/>
+                            <span style={{fontSize: '0.8rem', color: 'var(--text-secondary)'}}>
+                              {inq.base} | {inq.color} | {inq.length} {inq.model_variant ? `| Var: ${inq.model_variant}` : ''}
+                            </span>
+                          </td>
+                          <td>{inq.quantity}</td>
+                          <td>${Number(inq.offered_price).toFixed(2)}</td>
+                          <td><span className={`status-badge ${inq.status === 'Completed' ? 'delivered' : 'pending'}`}>{inq.status}</span></td>
+                          <td>
+                            <button className="btn btn-primary" style={{ padding: '6px 12px', fontSize: '0.85rem' }} onClick={() => setActiveInquiry(inq)}>
+                              Open Chat
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
                     </tbody>
                   </table>
-                </>
+                  )}
+                </div>
               )}
             </div>
           )}
@@ -287,7 +292,7 @@ const AdminPanel = () => {
           {activeTab === 'dashboard' && (
             <div className="dashboard-stats">
               <div className="stat-card">
-                <h3>Total Active Inquiries</h3>
+                <h3>Total Active Orders</h3>
                 <p className="stat-value">{inquiries.filter(i => i.status !== 'Completed').length}</p>
               </div>
               <div className="stat-card">
