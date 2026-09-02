@@ -14,6 +14,7 @@ import BuyerPanel from './pages/BuyerPanel';
 import TrackingPage from './pages/TrackingPage';
 import BlogPage from './pages/BlogPage';
 import BlogPostPage from './pages/BlogPostPage';
+import NotFoundPage from './pages/NotFoundPage';
 import VerifyPhone from './pages/VerifyPhone';
 import RequirePhoneVerification from './components/RequirePhoneVerification';
 import './App.css';
@@ -53,6 +54,9 @@ function App() {
           } />
           
           <Route path="/tracking" element={<TrackingPage />} />
+          
+          {/* 404 Catch-All Route */}
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </main>
       {!isDashboard && <Footer />}
