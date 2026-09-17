@@ -239,8 +239,9 @@ const AdminPanel = () => {
                   />
                 </div>
               ) : (
-                <>
-                  <h2>Quotation Inbox</h2>
+                <div className="admin-content-card">
+                  <h2>Orders Inbox</h2>
+                  <p className="text-secondary" style={{marginBottom: '20px'}}>Manage incoming orders from users.</p>
                   <table className="admin-table">
                     <thead>
                       <tr>
@@ -261,29 +262,24 @@ const AdminPanel = () => {
                             <td>{inq.buyer_email}</td>
                             <td>
                               <strong>{inq.product_name}</strong>
-                      {inquiries.map(inq => (
-                        <tr key={inq.id}>
-                          <td>{inq.buyer_email}</td>
-                          <td>
-                            <strong>{inq.product_name}</strong>
-                            <br/>
-                            <span style={{fontSize: '0.8rem', color: 'var(--text-secondary)'}}>
-                              {inq.base} | {inq.color} | {inq.length} {inq.model_variant ? `| Var: ${inq.model_variant}` : ''}
-                            </span>
-                          </td>
-                          <td>{inq.quantity}</td>
-                          <td>${Number(inq.offered_price).toFixed(2)}</td>
-                          <td><span className={`status-badge ${inq.status === 'Completed' ? 'delivered' : 'pending'}`}>{inq.status}</span></td>
-                          <td>
-                            <button className="btn btn-primary" style={{ padding: '6px 12px', fontSize: '0.85rem' }} onClick={() => setActiveInquiry(inq)}>
-                              Open Chat
-                            </button>
-                          </td>
-                        </tr>
-                      ))}
+                              <br/>
+                              <span style={{fontSize: '0.8rem', color: 'var(--text-secondary)'}}>
+                                {inq.base} | {inq.color} | {inq.length} {inq.model_variant ? `| Var: ${inq.model_variant}` : ''}
+                              </span>
+                            </td>
+                            <td>{inq.quantity}</td>
+                            <td>${Number(inq.offered_price).toFixed(2)}</td>
+                            <td><span className={`status-badge ${inq.status === 'Completed' ? 'delivered' : 'pending'}`}>{inq.status}</span></td>
+                            <td>
+                              <button className="btn btn-primary" style={{ padding: '6px 12px', fontSize: '0.85rem' }} onClick={() => setActiveInquiry(inq)}>
+                                Open Chat
+                              </button>
+                            </td>
+                          </tr>
+                        ))
+                      )}
                     </tbody>
                   </table>
-                  )}
                 </div>
               )}
             </div>
