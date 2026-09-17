@@ -19,7 +19,20 @@ const ContactPage = () => {
             <h3 style={{ color: 'var(--text-primary)', marginBottom: '16px' }}>Get in Touch</h3>
             <p style={{ marginBottom: '8px' }}><strong>Email:</strong> info@fiodebengal.com</p>
             <p style={{ marginBottom: '8px' }}><strong>WhatsApp:</strong> +44 7454 735807</p>
-            <p style={{ marginBottom: '8px' }}><strong>Business Hours:</strong> Monday - Friday, 9:00 AM - 6:00 PM (EST)</p>
+            <p style={{ marginBottom: '24px' }}><strong>Business Hours:</strong> Monday - Friday, 9:00 AM - 6:00 PM (EST)</p>
+            
+            <h3 style={{ color: 'var(--text-primary)', marginBottom: '16px', borderTop: '1px solid var(--border-muted)', paddingTop: '24px' }}>Company Information</h3>
+            <p style={{ marginBottom: '8px' }}><strong>Company Name:</strong> FIO DE BENGAL LIMITED</p>
+            <p style={{ marginBottom: '8px' }}><strong>Company Number:</strong> 17460327</p>
+            <p style={{ marginBottom: '8px' }}><strong>Registered Address & Stock Location:</strong></p>
+            <p style={{ marginBottom: '8px', paddingLeft: '16px', borderLeft: '2px solid var(--accent-gold)' }}>
+              OFFICE 21091, 182-184 HIGH STREET NORTH<br />
+              EAST HAM, LONDON<br />
+              UNITED KINGDOM E6 2JA
+            </p>
+            <p style={{ marginTop: '16px', fontSize: '0.95rem', color: 'var(--accent-gold)' }}>
+              <em>* All our stock is securely held and dispatched directly from our UK address for fast and reliable shipping.</em>
+            </p>
           </div>
         </div>
       </div>

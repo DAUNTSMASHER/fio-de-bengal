@@ -35,8 +35,11 @@ const Footer = () => {
         </div>
       </div>
       <div className="footer-bottom">
-        <div className="container">
+        <div className="container" style={{display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px'}}>
           <p>&copy; {new Date().getFullYear()} FIO de Bengal. All rights reserved.</p>
+          <p style={{fontSize: '0.8rem', color: 'var(--text-secondary)'}}>
+            FIO DE BENGAL LIMITED (Company No. 17460327) | OFFICE 21091, 182-184 HIGH STREET NORTH, EAST HAM, LONDON, E6 2JA
+          </p>
         </div>
       </div>
     </footer>
