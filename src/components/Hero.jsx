@@ -23,17 +23,17 @@ const Hero = () => {
           </p>
           
           <div className="hero-trust-points" style={{ marginBottom: '32px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '1.05rem', color: 'var(--text-primary)' }}>
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-gold)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-              <span>Officially Registered UK Company (No. 17460327)</span>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '12px', fontSize: '0.95rem', color: 'var(--text-primary)', background: 'rgba(255, 255, 255, 0.9)', padding: '12px 20px', borderRadius: '8px', borderLeft: '4px solid var(--accent-gold)', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', width: 'fit-content' }}>
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-gold)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}><polyline points="20 6 9 17 4 12"></polyline></svg>
+              <span><strong>Officially Registered UK Company</strong> (No. 17460327)</span>
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '1.05rem', color: 'var(--text-primary)' }}>
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-gold)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-              <span>All Stock Dispatched directly from the UK</span>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '12px', fontSize: '0.95rem', color: 'var(--text-primary)', background: 'rgba(255, 255, 255, 0.9)', padding: '12px 20px', borderRadius: '8px', borderLeft: '4px solid var(--accent-gold)', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', width: 'fit-content' }}>
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-gold)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}><polyline points="20 6 9 17 4 12"></polyline></svg>
+              <span>All Stock Dispatched directly from the <strong>United Kingdom</strong></span>
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', fontSize: '1.05rem', color: 'var(--text-primary)' }}>
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-gold)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-              <span>21-Day Refund Policy (Exclusive for Loyal Partners)</span>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '12px', fontSize: '0.95rem', color: 'var(--text-primary)', background: 'rgba(255, 255, 255, 0.9)', padding: '12px 20px', borderRadius: '8px', borderLeft: '4px solid var(--accent-gold)', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', width: 'fit-content' }}>
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-gold)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}><polyline points="20 6 9 17 4 12"></polyline></svg>
+              <span><strong>21-Day Refund Policy</strong> (Exclusive for Loyal Partners)</span>
             </div>
           </div>
           <div className="hero-actions">

@@ -129,23 +129,40 @@ const CartPage = () => {
 
       {showModal && (
         <div className="modal-overlay">
-          <div className="modal-content" style={{ maxWidth: '500px' }}>
-            <h2>Confirm Checkout</h2>
-            <p>You are placing an order for <strong>{cart.reduce((acc, i) => acc + i.quantity, 0)} items</strong> with a total value of <strong>${getCartTotal().toFixed(2)}</strong>.</p>
+          <div className="modal-content" style={{ maxWidth: '550px' }}>
+            <h2>Complete Your Order</h2>
+            
+            <div style={{ background: '#fff3e0', borderLeft: '4px solid #ff9800', padding: '16px', borderRadius: '8px', marginBottom: '20px' }}>
+              <p style={{ margin: '0 0 8px 0', fontWeight: 'bold', color: '#e65100' }}>Direct Payment Currently Unavailable</p>
+              <p style={{ margin: 0, fontSize: '0.9rem', color: '#e65100' }}>
+                We are currently implementing PayPal and other secure payment services. Direct checkout is temporarily paused. 
+              </p>
+            </div>
+
+            <p style={{ marginBottom: '16px' }}>
+              To finalize your order of <strong>{cart.reduce((acc, i) => acc + i.quantity, 0)} items</strong> (Total: <strong>${getCartTotal().toFixed(2)}</strong>), 
+              please submit this request and contact our sales team on WhatsApp at <strong>+44 7454 735807</strong> (or alternatively +8801905563207).
+            </p>
+
+            <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '20px', fontStyle: 'italic' }}>
+              * Please contact us to know more about the products from our supplier. As a company, we source premium products directly from our trusted suppliers to guarantee quality.
+            </p>
+
             <div className="form-group" style={{marginTop: '20px'}}>
               <label>Order Notes (Optional)</label>
               <textarea 
-                rows="4" 
+                rows="3" 
                 className="form-control" 
                 placeholder="Include any order notes or special instructions..."
                 value={message}
                 onChange={e => setMessage(e.target.value)}
               ></textarea>
             </div>
-            <div className="modal-actions" style={{display: 'flex', gap: '10px', marginTop: '20px'}}>
+            
+            <div className="modal-actions" style={{display: 'flex', gap: '10px', marginTop: '24px'}}>
               <button className="btn btn-outline" onClick={() => setShowModal(false)} disabled={submitting}>Cancel</button>
-              <button className="btn btn-primary" onClick={submitBulkInquiry} disabled={submitting}>
-                {submitting ? 'Processing...' : 'Place Order'}
+              <button className="btn btn-primary" onClick={submitBulkInquiry} disabled={submitting} style={{ flex: 1 }}>
+                {submitting ? 'Processing...' : 'Submit Request & Contact via WhatsApp'}
               </button>
             </div>
           </div>

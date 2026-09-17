@@ -26,6 +26,8 @@ const Footer = () => {
             <h4>Support</h4>
             <Link to="/faq">FAQ</Link>
             <Link to="/shipping">Shipping & Returns</Link>
+            <Link to="/privacy-policy">Privacy Policy</Link>
+            <Link to="/terms-of-service">Terms of Service</Link>
           </div>
           <div className="link-group">
             <h4>Account</h4>
