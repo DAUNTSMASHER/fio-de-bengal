@@ -25,7 +25,7 @@ const Footer = () => {
           <div className="link-group">
             <h4>Support</h4>
             <Link to="/faq">FAQ</Link>
-            <Link to="/shipping">Shipping Policy</Link>
+            <Link to="/shipping">Shipping & Returns</Link>
           </div>
           <div className="link-group">
             <h4>Account</h4>

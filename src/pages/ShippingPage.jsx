@@ -8,7 +8,7 @@ const ShippingPage = () => {
   return (
     <div className="page-layout texture-bengal-wave" style={{ padding: '60px 20px', minHeight: '80vh' }}>
       <div className="container" style={{ maxWidth: '800px', background: 'var(--surface-card)', padding: '40px', borderRadius: '12px', border: '1px solid var(--border-muted)' }}>
-        <h1 style={{ fontFamily: 'Georgia, serif', color: 'var(--accent-gold)', marginBottom: '24px' }}>Shipping Policy</h1>
+        <h1 style={{ fontFamily: 'Georgia, serif', color: 'var(--accent-gold)', marginBottom: '24px' }}>Shipping & Returns Policy</h1>
         <div style={{ color: 'var(--text-secondary)', lineHeight: '1.8', fontSize: '1.1rem' }}>
           
           <h3 style={{ color: 'var(--text-primary)', marginTop: '32px', marginBottom: '12px' }}>Order Processing</h3>
@@ -35,6 +35,13 @@ const ShippingPage = () => {
           <p>
             Once your order ships, you will receive a shipping confirmation email containing your tracking number(s). 
             You can also use the Tracking page on our website to monitor the status of your shipment in real-time.
+          </p>
+
+          <h3 style={{ color: 'var(--text-primary)', marginTop: '32px', marginBottom: '12px' }}>Returns & Refunds</h3>
+          <p style={{ marginBottom: '16px' }}>
+            We offer a comprehensive <strong>21-day refund policy</strong> starting from the date the buyer receives the parcel. 
+            <br/><br/>
+            <em>Please note: This exclusive refund policy is a special privilege strictly reserved for our loyal partners who have actively maintained a business relationship with FIO de Bengal for at least 2 years.</em>
           </p>
         </div>
       </div>
